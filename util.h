@@ -1,17 +1,26 @@
+/*
+ * File: util.h
+ * Author: Diogo Gaspar, 99207
+ * Description: Header file containing general macros and prototypes
+ */
+
 /* the buffer can contain at most 65535 characters + '\0' */
 #define BUFFERSIZE 65536
 /* the command can have at most 6 characters + '\0' */
 #define MAX_COMMAND_SIZE 7
+/* initial "to-be stored" memory amount for the input */
+#define MEM_AMOUNT 16
 
 /* the program can continue - the command wasn't quit */
 #define CONTINUE 1
 /* the program must stop - the command was quit */
-#define QUIT 0
+#define EXIT 0
 /* prompt macro */
 #define PROMPT "? "
 
 /* command strings */
 #define HELP "help"
+#define QUIT "quit"
 #define SET "set"
 #define PRINT "print"
 #define FIND "find"
@@ -33,11 +42,11 @@
 
 /* Function prototypes */
 
-int commandHub(char *input);
-void helpHub();
-void setHub(char *input);
-void printHub(char *input);
-void findHub(char *input);
-void listHub(char *input);
-void searchHub(char *input);
-void deleteHub(char *input);
+int commandHub();
+void help();
+void set(char *input);
+void print(char *input);
+void find(char *input);
+void list(char *input);
+void search(char *input);
+void del(char *input);
