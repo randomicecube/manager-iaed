@@ -4,12 +4,10 @@
  * Description: Header file containing general macros and prototypes
  */
 
-/* the buffer can contain at most 65535 characters + '\0' */
-#define BUFFERSIZE 65536
 /* the command can have at most 6 characters + '\0' */
 #define MAX_COMMAND_SIZE 7
 /* initial "to-be stored" memory amount for the input */
-#define MEM_AMOUNT 16
+#define MEM_AMOUNT 1024
 
 /* the program can continue - the command wasn't quit */
 #define CONTINUE 1
@@ -39,10 +37,10 @@
 #define SEARCH_INFO "search: Procura o caminho dado um valor.\n"
 #define DELETE_INFO "delete: Apaga um caminho e todos os subcaminhos.\n"
 
-
 /* Function prototypes */
 
 int commandHub();
+void readAfterCommand(char *s);
 void help();
 void set(char *input);
 void print(char *input);
