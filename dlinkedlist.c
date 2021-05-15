@@ -31,10 +31,11 @@ link insertTailDLL(link head, link tail, char *s){
   aux = tail;
   tail = newNode;
   tail->prev = aux;
+  tail->prev->next=tail;
   return head;
 }
 
-/* looksup the node containing a certain value (s) on the DLL */
+/* looks up the node containing a certain value (s) on the DLL */
 link lookupDLL(link head, char *s){
   link aux;
   for(aux = head; aux != NULL; aux = aux->next){

@@ -24,87 +24,104 @@ linkAVL createNodeAVL(char *s, char *name){
   return;
 }
 
-/* aux function to check the max value between 2 ints, used in rotations */
-int maxAuxAVL(int h1, int h2){
-  if(h1 >= h2){
-    return h1;
-  }
-  return h2;
-}
-
-/* returns the height of the AVL tree with node as its root */
-int heightNodeAVL(linkAVL node){
+int height(linkAVL node){
   if(node == NULL){
     return 0;
   }
   return node->height;
-} 
+}
 
-/* returns the current balance of the AVL tree with node as its root */
-int treeBalanceAVL(linkAVL node){
+linkAVL rotL(linkAVL node){
+  linkAVL x = node->right;
+  node->right = x->left;
+  x->left = node;
+  updateHeight(node);
+  updateHeight(x);
+  return x; 
+}
+
+linkAVL rotR(linkAVL node){
+  linkAVL x = node->left;
+  node->left = x->right;
+  x->right = node;
+  updateHeight(node);
+  updateHeight(x);
+  return x; 
+}
+
+linkAVL rotLR(linkAVL node){
+  if(node == NULL){
+    return node;
+  }
+  node->left = rotL(node->left);
+  return rotR(node);
+}
+
+linkAVL rotRL(linkAVL node){
+  if(node == NULL){
+    return node;
+  }
+  node->right = rotR(node->right);
+  return rotL(node);
+}
+
+void updateHeight(linkAVL node){
+  int hLeft = height(node->left), hRight = height(node->right);
+  node->height = hLeft > hRight ? hLeft + 1; hRIght + 1;
+  return;
+}
+
+int balanceNode(linkAVL node){
   if(node == NULL){
     return 0;
   }
   return height(node->left) - height(node->right);
 }
 
-/* performs a left-rotation to the AVL */
-linkAVL rotlAVL(linkAVL node){ /* node is the current root */
-  linkAVL auxRight = node->right;
-  linkAVL auxLeft = auxRight->left;
-  auxRight->left = node;
-  node->right = auxLeft;
-  auxRight->height = maxAuxAVL(height(auxRight->right), height(auxRight->left)) + 1;
-  node->height = maxAuxAVL(height(node->right), height(node->left)) + 1;  
-  return auxRight; /* auxRight is the new root of the tree*/
-}
-
-/* performs a right-rotation to the AVL */
-linkAVL rotrAVL(linkAVL node){ /* node is the current root */
-  linkAVL auxLeft = node->left;
-  linkAVL auxRight = auxLeft->right;
-  auxLeft->right = node;
-  node->left = auxRight;
-  auxLeft->height = maxAuxAVL(height(auxLeft->right), height(auxLeft->left)) + 1;
-  node->height = maxAuxAVL(height(node->right), height(node->left)) + 1;  
-  return auxLeft; /* auxLeft is the new root of the tree*/
-}
-
-/* inserts a node to an AVL tree, given its value and dirName */
-linkAVL insertNodeAVL(linkAVL node, char* s, char* name){ /* node is the current root */
-  int currBalance;
-  if(node == NULL){
-    return createNodeAVL(s, name);
-  }
-  if(strcmp(node->dirName, name) < 0){
-    node->right = insertNodeAVL(node->right, s, name);
-  }
-  else if(strcmp(node->dirName, name) > 0){
-    node->left = insertNodeAVL(node->left, s, name);
-  }
-  else{
+linkAVL balanceAVL(linkAVL node){
+  int balanceFactor, hLeft, hRight;
+  if(h == NULL){
     return node;
   }
-
-  node->height = max(height(node->right), height(node->left));
-  currBalance = treeBalanceAVL(node);
-
-  if(currBalance > 1 && strcmp(node->left->dirName, name) > 0){
-    return rotrAVL(node);
+  balanceFactor = balanceNode(node);
+  if(balanceFactor > 1){
+    if(balanceNode(node->left) >= 0){
+      node = rotR(node);
+    }
+    else{
+      node = rotLR(node);
+    }
   }
-  if(currBalance > 1 && strcmp(node->left->dirName, name) < 0){
-    node->left = rotlAVL(node->left);
-    return rotrAVL(node);
+  else if(balanceFactor < -1){
+    if(balanceNode(node->right) <= 0){
+      node = rotL(node);
+    }
+    else{
+      node = rotRL(node);
+    }
   }
-  if(currBalance < -1 && strcmp(node->right->dirName, name) < 0){
-    return rotlAVL(node);
-  }
-  if(currBalance < -1 && strcmp(node->right->dirName, name) > 0){
-    node->right = rotrAVL(node->right);
-    return rotlAVL(node);
+  else{
+    updateHeight(node);
   }
   return node;
 }
+
+linkAVL insertAVL(linkAVL node, char*s, char*name){
+  if(node == NULL){
+    return createNodeAVL(s, name);
+  }
+  if(strcmp(name, node->dirName) < 0){
+    node->left = insertAVL(node->left, s, name);
+  }
+  else{
+    node->right = insertAVL(node->right, s, name);
+  }
+  node = balanceAVL(node);
+  return node;
+}
+
+/* --- */
+linkAVL deleteAVL
 
 void freeNodeAVL(link node){
   if(node == NULL){
