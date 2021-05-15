@@ -7,13 +7,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "util.h"
+#include "structures.h"
 
 /* for simplicity's sake, I'll refer to a doubly linked list as a DLL */
 
 /* creates a new, to-be-inserted, node */
-link createNode(char *s){
-  link newNode = (link)malloc(sizeof(Node));
+link createNodeDLL(char *s){
+  link newNode = (link)malloc(sizeof(struct nodeDLL));
   newNode->value = (char*)malloc(sizeof(char)*(strlen(s) + 1));
   strcpy(newNode->value, s);
   newNode->prev = NULL;
@@ -21,23 +21,16 @@ link createNode(char *s){
   return newNode;  
 }
 
-/* inserts the node as the new head of the DLL */
-link insertHead(link head, link tail, char *s){
-  link newNode = createNode(s);
-  newNode->next = head;
-  return newNode; /* nodeInserted is returned since it is the head */
-}
-
 /* inserts the node as the new tail of the DLL */
-link insertTail(link head, char *s){
+link insertTailDLL(link head, link tail, char *s){
   link newNode, aux;
+  newNode = createNodeDLL(s);
   if(head == NULL){
-    return createNode(s); /* if there's no head, this is the "new" head */ 
+    head = newNode;
   }
-  newNode = createNode(s);
-  for(aux = head; aux->next != NULL; aux = aux->next);
-  aux->next = newNode;
-  newNode->prev = aux;
+  aux = tail;
+  tail = newNode;
+  tail->prev = aux;
   return head;
 }
 
@@ -45,7 +38,7 @@ link insertTail(link head, char *s){
 link lookupDLL(link head, char *s){
   link aux;
   for(aux = head; aux != NULL; aux = aux->next){
-    if(strcmp(s, aux->text)==0){
+    if(strcmp(s, aux->value)==0){
       return aux;
     }
   }
@@ -53,18 +46,18 @@ link lookupDLL(link head, char *s){
 }
 
 /* deletes a node from the DLL */
-link deleteNode(link head, char *s){
+link deleteNodeDLL(link head, char *s){
   link x, prev;
   int found = 0;
   for(x = head, prev = NULL; x != NULL && !found; prev = x, x = x->next){
-    if(strcmp(x->text, s)==0){
+    if(strcmp(x->value, s)==0){
       if(x==head){
-        head = t->next;
+        head = x->next;
       }
       else{
-        prev->next = x-> next;
+        prev->next = x->next;
       }
-      freeNode(x);
+      freeNodeDLL(x);
       found++;
     }
   }
@@ -75,14 +68,40 @@ link deleteNode(link head, char *s){
 void printDLL(link head){
   link aux;
   for(aux = head; aux != NULL; aux = aux->next){
-    printf("%s\n", aux->text);
+    printf("%s\n", aux->value);
   }
   return;
 }
 
 /* frees a node */
-void freeNode(link x){
-  free(x->text);
+void freeNodeDLL(link x){
+  if(x->next != NULL){
+    x->next->prev = x->prev;
+  }
+  if(x->prev != NULL){
+    x->prev->next = x->next;
+  }
+  free(x->value);
   free(x);
   return;
+}
+
+/* frees the DLL */
+
+void freeDLL(link head){
+  link x;
+  if(head == NULL){
+    return;
+  }
+  for(x = head; x != NULL; x = x->next){
+    freeNodeDLL(x);
+  }
+  return;
+}
+
+link initializeDLL(){
+  Dlist newList;
+  newList->head = NULL;
+  newList->tail = NULL;
+  return newList;
 }

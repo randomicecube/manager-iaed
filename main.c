@@ -31,11 +31,6 @@ int commandHub(){
 	char *input;
 	scanf("%s", command);
 
-	getchar(); /* skips the whitespace */
-	/* the allocated amount of memory can be changed afterwards if needed */
-	input = (char*)malloc(sizeof(char)*MEM_AMOUNT);
-	readAfterCommand(input);
-
 	if(strcmp(command, QUIT) == 0){
 		/* missing here: freeing function(s) for the data strutures*/
 		free(command);
@@ -46,7 +41,13 @@ int commandHub(){
 		free(command);
 		return CONTINUE;
 	}
-	/* else if(strcmp(command, SET) == 0) 
+
+	getchar(); /* skips the whitespace */
+	/* the allocated amount of memory can be changed afterwards if needed */
+	input = (char*)malloc(sizeof(char)*MEM_AMOUNT);
+	readAfterCommand(input);
+
+	/* if(strcmp(command, SET) == 0) 
 		set(input);
 	else if(strcmp(command, PRINT) == 0) 
 		print(input);
@@ -72,9 +73,8 @@ void readAfterCommand(char *s){
 			currentMem = 2*currentMem;
 			s = (char*)realloc(s, sizeof(char)*currentMem);
 		}
-		*(s+i) = c;
-		i++;
+		*(s + i++) = c;
 	}
-	*(s+i) = '\0';
+	*(s + i) = '\0';
 	return;
 }
