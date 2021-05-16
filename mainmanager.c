@@ -33,7 +33,7 @@ void set(linkAVL x, Dlist *dll){
 	readValue(val);
 	dir = strtok(path, "/");
 	while(dir != NULL){
-		auxDir = traverseDir(dir, auxTree, dirDLL);
+		auxDir = traverseSet(dir, auxTree, dirDLL);
 		dirDLL = auxDir->subDirectories;
 		auxTree = auxDir->tree;
 		dir = strtok(NULL, "/");
@@ -42,7 +42,7 @@ void set(linkAVL x, Dlist *dll){
 	return;
 }
 
-struct nodeAVL* traverseDir(char *dir, linkAVL x, Dlist *dll){
+struct nodeAVL* traverseSet(char *dir, linkAVL x, Dlist *dll){
 	int comp;
 	linkAVL newTree;
 	struct nodeAVL *newNodeAVL;
@@ -54,6 +54,7 @@ struct nodeAVL* traverseDir(char *dir, linkAVL x, Dlist *dll){
 		newDll = initializeDLL();
 		newNodeAVL->tree = newTree;
 		newNodeAVL->subDirectories = newDll;
+		x = insertAVL(x, newNodeAVL);
 		return newNodeAVL;
 	}
 	comp = strcmp(x->node->dirName, dir);
@@ -61,16 +62,50 @@ struct nodeAVL* traverseDir(char *dir, linkAVL x, Dlist *dll){
 		return x->node;
 	}
 	else if(comp < 0){
-		traverseDir(dir, x->right, dll);
+		return traverseSet(dir, x->right, dll);
 	}
 	else{
-		traverseDir(dir, x->left, dll);
+		return traverseSet(dir, x->left, dll);
 	}
-	return NULL;
 }
 
 void find(linkAVL x){
-	
+	char *path, *dir;
+	struct nodeAVL *auxDir;
+	linkAVL auxTree = x;
+	path = (char*)malloc(sizeof(char)*MEM_AMOUNT);
+	scanf("%s", path);
+	dir = strtok(path, "/");
+	while(dir != NULL){
+		auxDir = traverseFind(dir, auxTree);
+		auxTree = auxDir->tree;
+		dir = strtok(NULL, "/");
+	}
+	if(strcmp("", auxDir->value) == 0){
+		printf(NO_DATA);
+	}
+	else{
+		printf("%s\n", auxDir->value);
+	}
+	return;
+}
+
+struct nodeAVL* traverseFind(char *dir, linkAVL x){
+	int comp;
+	if(x == NULL){
+		printf(NOT_FOUND);
+		return NULL;
+	}
+	comp = strcmp(x->node->dirName, dir);
+	if(comp == 0){
+		return x->node;
+	}
+	else if(comp < 0){
+		return traverseFind(dir, x->right);
+	}
+	else{
+		return traverseFind(dir, x->left);
+	}
 }
 
 

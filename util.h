@@ -28,7 +28,6 @@
 #define DELETE "delete"
 
 /* command information - used in help */
-
 #define HELP_INFO "help: Imprime os comandos disponíveis.\n"
 #define QUIT_INFO "quit: Termina o programa.\n"
 #define SET_INFO "set: Adiciona ou modifica o valor a armazenar.\n"
@@ -37,6 +36,10 @@
 #define LIST_INFO "list: Lista todos os componentes de um caminho.\n"
 #define SEARCH_INFO "search: Procura o caminho dado um valor.\n"
 #define DELETE_INFO "delete: Apaga um caminho e todos os subcaminhos.\n"
+
+/* error messages */
+#define NO_DATA "no data\n"
+#define NOT_FOUND "not found\n"
 
 /* DLL node struct */
 struct nodeDLL{
@@ -83,7 +86,8 @@ void del();
 int commandHub();
 void readValue(char *s);
 void readPath(char *s);
-struct nodeAVL* traverseDir(char *dir, linkAVL x, Dlist *dll);
+struct nodeAVL* traverseSet(char *dir, linkAVL x, Dlist *dll);
+struct nodeAVL* traverseFind(char *dir, linkAVL x);
 
 /* general DLL-related function prototypes */
 link createNodeDLL(char *s);
@@ -104,7 +108,8 @@ linkAVL rotLR(linkAVL node);
 linkAVL rotRL(linkAVL node);
 void updateHeight(linkAVL node);
 int balanceNode(linkAVL node);
-linkAVL balanceAVL(linkAVL node);
+linkAVL balanceAVL(linkAVL x);
+linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode);
 void freeAVL(linkAVL node);
 linkAVL initializeAVL();
 /*

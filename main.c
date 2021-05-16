@@ -49,9 +49,9 @@ int commandHub(linkAVL tree, Dlist *dll){
 	getchar(); /* skips the whitespace */
 
 	if(strcmp(command, SET) == 0) 
-		set(tree, dll); /*
+		set(tree, dll);
 	else if(strcmp(command, FIND) == 0) 
-		find();
+		find(tree); /*
 	else if(strcmp(command, LIST) == 0) 
 		list();
 	else if(strcmp(command, SEARCH) == 0) 

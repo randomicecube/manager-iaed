@@ -12,8 +12,18 @@
 struct nodeAVL* createNodeAVL(char *s, char *name){
   struct nodeAVL* newNode = (struct nodeAVL *)malloc(sizeof(struct nodeAVL));
   Dlist *auxList;
-  newNode->value = (char*)malloc(sizeof(char)*(strlen(s)+1));
-  newNode->dirName = (char*)malloc(sizeof(char)*(strlen(name)+1));
+  if(strcmp("", s) != 0){
+    newNode->value = (char*)malloc(sizeof(char)*(strlen(s)+1));
+  }
+  else{
+    newNode->value = (char*)malloc(sizeof(char)*(MEM_AMOUNT));
+  }
+  if(strcmp("", name) != 0){
+    newNode->dirName = (char*)malloc(sizeof(char)*(strlen(name)+1));
+  }
+  else{
+    newNode->dirName = (char*)malloc(sizeof(char)*(MEM_AMOUNT));
+  }
   strcpy(newNode->value, s);
   strcpy(newNode->dirName, name);
   newNode->height = 1;
@@ -76,32 +86,47 @@ int balanceNode(linkAVL x){
   return height(x->left->node) - height(x->right->node);
 }
 
-linkAVL balanceAVL(linkAVL node){
+linkAVL balanceAVL(linkAVL x){
   int balanceFactor;
-  if(node == NULL){
-    return node;
+  if(x == NULL){
+    return x;
   }
-  balanceFactor = balanceNode(node);
+  balanceFactor = balanceNode(x);
   if(balanceFactor > 1){
-    if(balanceNode(node->left) >= 0){
-      node = rotR(node);
+    if(balanceNode(x->left) >= 0){
+      x = rotR(x);
     }
     else{
-      node = rotLR(node);
+      x = rotLR(x);
     }
   }
   else if(balanceFactor < -1){
-    if(balanceNode(node->right) <= 0){
-      node = rotL(node);
+    if(balanceNode(x->right) <= 0){
+      x = rotL(x);
     }
     else{
-      node = rotRL(node);
+      x = rotRL(x);
     }
   }
   else{
-    updateHeight(node);
+    updateHeight(x);
   }
-  return node;
+  return x;
+}
+
+linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode){
+  if(x->node == NULL || x == NULL || strcmp("", x->node->dirName) == 0){
+    x->node = newNode;
+    return x;
+  }
+  if(strcmp(x->node->dirName, newNode->dirName) > 0){
+    x->left = insertAVL(x->left, newNode);
+  }
+  else{
+    x->right = insertAVL(x->right, newNode);
+  }
+  x = balanceAVL(x);
+  return x;
 }
 
 /*
