@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "structures.h"
+#include "util.h"
 
 /* for simplicity's sake, I'll refer to a doubly linked list as a DLL */
 
@@ -22,17 +22,18 @@ link createNodeDLL(char *s){
 }
 
 /* inserts the node as the new tail of the DLL */
-link insertTailDLL(link head, link tail, char *s){
-  link newNode, aux;
-  newNode = createNodeDLL(s);
+void insertTailDLL(link head, link tail, char *s){
+  link newNode = createNodeDLL(s);
   if(head == NULL){
     head = newNode;
   }
-  aux = tail;
+  if(tail != NULL){
+    tail->next = newNode;
+  }
+  newNode->next = NULL;
+  newNode->prev = tail;
   tail = newNode;
-  tail->prev = aux;
-  tail->prev->next=tail;
-  return head;
+  return;
 }
 
 /* looks up the node containing a certain value (s) on the DLL */
@@ -100,8 +101,8 @@ void freeDLL(link head){
   return;
 }
 
-link initializeDLL(){
-  Dlist newList;
+Dlist* initializeDLL(){
+  Dlist *newList = (Dlist *)malloc(sizeof(Dlist));
   newList->head = NULL;
   newList->tail = NULL;
   return newList;

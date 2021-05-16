@@ -7,28 +7,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "structures.h"
+#include "util.h"
 
-linkAVL createNodeAVL(char *s, char *name){
-  linkAVL newNode = (linkAVL)malloc(sizeof(struct nodeAVL));
-  Dlist auxList;
+struct nodeAVL* createNodeAVL(char *s, char *name){
+  struct nodeAVL* newNode = (struct nodeAVL *)malloc(sizeof(struct nodeAVL));
+  Dlist *auxList;
   newNode->value = (char*)malloc(sizeof(char)*(strlen(s)+1));
   newNode->dirName = (char*)malloc(sizeof(char)*(strlen(name)+1));
   strcpy(newNode->value, s);
-  strcpy(newNode->dirName, name)
+  strcpy(newNode->dirName, name);
   newNode->height = 1;
-  newNode->left = NULL;
-  newNode->right = NULL;
   auxList = initializeDLL();
   newNode->subDirectories = auxList;
-  return;
+  return newNode;
 }
 
-int height(linkAVL node){
-  if(node == NULL){
+int height(struct nodeAVL *x){
+  if(x == NULL){
     return 0;
   }
-  return node->height;
+  return x->height;
 }
 
 linkAVL rotL(linkAVL node){
@@ -65,22 +63,22 @@ linkAVL rotRL(linkAVL node){
   return rotL(node);
 }
 
-void updateHeight(linkAVL node){
-  int hLeft = height(node->left), hRight = height(node->right);
-  node->height = hLeft > hRight ? hLeft + 1; hRIght + 1;
+void updateHeight(linkAVL x){
+  int hLeft = height(x->left->node), hRight = height(x->right->node);
+  x->node->height = hLeft > hRight ? hLeft + 1: hRight + 1;
   return;
 }
 
-int balanceNode(linkAVL node){
-  if(node == NULL){
+int balanceNode(linkAVL x){
+  if(x == NULL){
     return 0;
   }
-  return height(node->left) - height(node->right);
+  return height(x->left->node) - height(x->right->node);
 }
 
 linkAVL balanceAVL(linkAVL node){
-  int balanceFactor, hLeft, hRight;
-  if(h == NULL){
+  int balanceFactor;
+  if(node == NULL){
     return node;
   }
   balanceFactor = balanceNode(node);
@@ -106,24 +104,15 @@ linkAVL balanceAVL(linkAVL node){
   return node;
 }
 
-linkAVL insertAVL(linkAVL node, char*s, char*name){
-  if(node == NULL){
-    return createNodeAVL(s, name);
-  }
-  if(strcmp(name, node->dirName) < 0){
-    node->left = insertAVL(node->left, s, name);
-  }
-  else{
-    node->right = insertAVL(node->right, s, name);
-  }
-  node = balanceAVL(node);
-  return node;
+/*
+void freeAVL(linkAVL node){
+  if(node->left != NULL){
+  freeAVL(node->left);
+  freeAVL(node->right);
+  freeNodeAVL(node);
 }
 
-/* --- */
-linkAVL deleteAVL
-
-void freeNodeAVL(link node){
+void freeNodeAVL(struct nodeAVL *node){
   if(node == NULL){
     return;
   }
@@ -133,5 +122,13 @@ void freeNodeAVL(link node){
   free(node->dirName);
   freeDLL(subDirectories);
   return;
-}
+} */
 
+linkAVL initializeAVL(){
+  linkAVL newTree = (linkAVL)malloc(sizeof(struct treeAVL));
+  struct nodeAVL *newNode = createNodeAVL("", "");
+  newTree->left = NULL;
+  newTree->right = NULL;
+  newTree->node = newNode;
+  return newTree;
+}

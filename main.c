@@ -12,12 +12,12 @@
 /* Main program function */
 int main(){
 	int state;
-
-	/* initialize data structures here */
+	Dlist *rootDLL = initializeDLL();
+	linkAVL rootAVL = initializeAVL();
 
 	do{
 		printf(PROMPT);
-		state = commandHub();
+		state = commandHub(rootAVL, rootDLL);
 	}while(state == CONTINUE);
 
 	return 0;
@@ -26,9 +26,8 @@ int main(){
 /* TODO: set, print, find, list, search, delete */
 
 /* Hub that redirects the command to its respective functions */
-int commandHub(){
+int commandHub(linkAVL tree, Dlist *dll){
 	char *command = (char*)malloc(sizeof(char)*MAX_COMMAND_SIZE);
-	char *input;
 	scanf("%s", command);
 
 	if(strcmp(command, QUIT) == 0){
@@ -41,31 +40,44 @@ int commandHub(){
 		free(command);
 		return CONTINUE;
 	}
+	/* else if(strcmp(command, PRINT) == 0){
+		print(tree, dll);
+		free(command);
+		return CONTINUE;
+	} */
 
 	getchar(); /* skips the whitespace */
-	/* the allocated amount of memory can be changed afterwards if needed */
-	input = (char*)malloc(sizeof(char)*MEM_AMOUNT);
-	readAfterCommand(input);
 
-	/* if(strcmp(command, SET) == 0) 
-		set(input);
-	else if(strcmp(command, PRINT) == 0) 
-		print(input);
+	if(strcmp(command, SET) == 0) 
+		set(tree, dll); /*
 	else if(strcmp(command, FIND) == 0) 
-		find(input);
+		find();
 	else if(strcmp(command, LIST) == 0) 
-		list(input);
+		list();
 	else if(strcmp(command, SEARCH) == 0) 
-		search(input);
+		search();
 	else if(strcmp(command, DELETE) == 0) 
-		del(input); */
+		del(); */
 	
-	free(input);
 	free(command);
 	return CONTINUE;
 }
 
-void readAfterCommand(char *s){
+void readPath(char *s){
+	int i = 0, currentMem = MEM_AMOUNT;
+	char c;
+	while((c = getchar()) != ' ' && c != '\t'){
+		if(i == currentMem){
+			currentMem = 2*currentMem;
+			s = (char*)realloc(s, sizeof(char)*currentMem);
+		}
+		*(s + i++) = c;
+	}
+	*(s + i) = '\0';
+	return;
+}
+
+void readValue(char *s){
 	int i = 0, currentMem = MEM_AMOUNT;
 	char c;
 	while((c = getchar()) != EOF && c != '\n'){
