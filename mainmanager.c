@@ -35,7 +35,6 @@ void set(linkAVL x, Dlist *dll){
 	dir = strtok(path, "/");
 	while(dir != NULL){
 		auxDir = setAux(dir, auxTree, dirDLL);
-		printf("the directory i just added is: %s\n", auxTree->node->dirName);
 		dirDLL = auxDir->subDirectories;
 		auxTree = auxDir->tree;
 		dir = strtok(NULL, "/");
@@ -47,11 +46,13 @@ void set(linkAVL x, Dlist *dll){
 }
 
 struct nodeAVL* setAux(char *dir, linkAVL x, Dlist *dll){
-	struct nodeAVL *newNodeAVL;
+	struct nodeAVL *newNodeAVL = traverse(NOT_FIND_ERROR, dir, x);
 	insertTailDLL(dll->head, dll->tail, dir);
-	newNodeAVL = createNodeAVL("", dir);
-	newNodeAVL->tree = initializeAVL();
-	newNodeAVL->subDirectories = initializeDLL();
+	if(newNodeAVL == NULL){
+		newNodeAVL = createNodeAVL("", dir);
+		newNodeAVL->tree = initializeAVL();
+		newNodeAVL->subDirectories = initializeDLL();
+	}
 	x = insertAVL(x, newNodeAVL);
 	return newNodeAVL;
 }
@@ -65,7 +66,7 @@ void find(linkAVL x){
 	scanf("%s", path);
 	dir = strtok(path, "/");
 	while(dir != NULL){
-		auxDir = traverseFind(dir, auxTree);
+		auxDir = traverse(FIND_ERROR, dir, auxTree);
 		if(strcmp(auxDir->dirName, "") == 0){
 			return;
 		}
@@ -82,26 +83,6 @@ void find(linkAVL x){
 	return;
 }
 
-struct nodeAVL* traverseFind(char *dir, linkAVL x){
-	int comp;
-	struct nodeAVL *auxNode;
-	if(x == NULL){
-		auxNode = createNodeAVL("", "");
-		printf(NOT_FOUND);
-		return auxNode;
-	}
-	comp = strcmp(x->node->dirName, dir);
-	if(comp == 0){
-		return x->node;
-	}
-	else if(comp < 0){
-		return traverseFind(dir, x->right);
-	}
-	else{
-		return traverseFind(dir, x->left);
-	}
-}
-
 void list(linkAVL x){
 	char c, *dir, *path = (char*)malloc(sizeof(char)*MEM_AMOUNT);
 	struct nodeAVL* auxDir;
@@ -116,7 +97,7 @@ void list(linkAVL x){
 		strcpy(path, "");
 	}
 	while(skip == 0 && dir != NULL){
-		auxDir = traverseList(dir, auxTree);
+		auxDir = traverse(NOT_FIND_ERROR, dir, auxTree);
 		if(strcmp(auxDir->dirName, "") == 0){
 			return;
 		}
@@ -126,26 +107,6 @@ void list(linkAVL x){
 	traverseListSubPath(auxTree);
 	free(path);
 	return;
-}
-
-struct nodeAVL* traverseList(char *dir, linkAVL x){
-	int comp;
-	struct nodeAVL *auxNode;
-	if(x == NULL){
-		auxNode = createNodeAVL("", "");
-		printf(NOT_FOUND);
-		return auxNode;
-	}
-	comp = strcmp(x->node->dirName, dir);
-	if(comp == 0){
-		return x->node;
-	}
-	else if(comp < 0){
-		return traverseFind(dir, x->right);
-	}
-	else{
-		return traverseFind(dir, x->left);
-	}
 }
 
 void traverseListSubPath(linkAVL x){

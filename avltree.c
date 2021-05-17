@@ -145,6 +145,27 @@ linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode){
   return x;
 }
 
+
+struct nodeAVL* traverse(int func, char *dir, linkAVL x){
+	int comp;
+	if(x == NULL){
+    if(func == FIND_ERROR){
+		  printf(NOT_FOUND);
+    }
+		return NULL;
+	}
+	comp = strcmp(x->node->dirName, dir);
+	if(comp == 0){
+		return x->node;
+	}
+	else if(comp < 0){
+		return traverse(func, dir, x->right);
+	}
+	else{
+		return traverse(func, dir, x->left);
+	}
+}
+
 /*
 void freeAVL(linkAVL node){
   if(node->left != NULL){

@@ -39,6 +39,8 @@
 /* error messages */
 #define NO_DATA "no data\n"
 #define NOT_FOUND "not found\n"
+#define FIND_ERROR 0
+#define NOT_FIND_ERROR 1
 
 /* ---------------------------------STRUCTS--------------------------------- */
 
@@ -92,8 +94,6 @@ void del();
 
 /* command aux functions */
 struct nodeAVL* setAux(char *dir, linkAVL x, Dlist *dll);
-struct nodeAVL* traverseFind(char *dir, linkAVL x);
-struct nodeAVL* traverseList(char *dir, linkAVL x);
 void traverseListSubPath(linkAVL x);
 
 /* general DLL-related function prototypes */
@@ -117,6 +117,7 @@ void updateHeight(linkAVL node);
 int balanceNode(linkAVL node);
 linkAVL balanceAVL(linkAVL x);
 linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode);
+struct nodeAVL* traverse(int func, char *dir, linkAVL x);
 void freeAVL(linkAVL node);
 linkAVL initializeAVL();
 /*
