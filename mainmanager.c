@@ -33,40 +33,27 @@ void set(linkAVL x, Dlist *dll){
 	readValue(val);
 	dir = strtok(path, "/");
 	while(dir != NULL){
-		auxDir = traverseSet(dir, auxTree, dirDLL);
+		auxDir = setAux(dir, auxTree, dirDLL);
 		dirDLL = auxDir->subDirectories;
 		auxTree = auxDir->tree;
 		dir = strtok(NULL, "/");
 	}
 	strcpy(auxDir->value, val);
+	free(path);
+	free(val);
 	return;
 }
 
-struct nodeAVL* traverseSet(char *dir, linkAVL x, Dlist *dll){
-	int comp;
-	linkAVL newTree;
+struct nodeAVL* setAux(char *dir, linkAVL x, Dlist *dll){
 	struct nodeAVL *newNodeAVL;
-	Dlist *newDll;
-	if(x == NULL || strcmp(x->node->dirName, "") == 0){
-		insertTailDLL(dll->head, dll->tail, dir);
-		newNodeAVL = createNodeAVL("", dir);
-		newTree = initializeAVL();
-		newDll = initializeDLL();
-		newNodeAVL->tree = newTree;
-		newNodeAVL->subDirectories = newDll;
-		x = insertAVL(x, newNodeAVL);
-		return newNodeAVL;
-	}
-	comp = strcmp(x->node->dirName, dir);
-	if(comp == 0){
-		return x->node;
-	}
-	else if(comp < 0){
-		return traverseSet(dir, x->right, dll);
-	}
-	else{
-		return traverseSet(dir, x->left, dll);
-	}
+	insertTailDLL(dll->head, dll->tail, dir);
+	newNodeAVL = createNodeAVL("", dir);
+	newNodeAVL->tree = initializeAVL();
+	x->left = initializeAVL();
+	x->right = initializeAVL();
+	newNodeAVL->subDirectories = initializeDLL();
+	x = insertAVL(x, newNodeAVL);
+	return newNodeAVL;
 }
 
 void find(linkAVL x){
@@ -78,6 +65,9 @@ void find(linkAVL x){
 	dir = strtok(path, "/");
 	while(dir != NULL){
 		auxDir = traverseFind(dir, auxTree);
+		if(strcmp(auxDir->dirName, "") == 0){
+			return;
+		}
 		auxTree = auxDir->tree;
 		dir = strtok(NULL, "/");
 	}
@@ -87,14 +77,17 @@ void find(linkAVL x){
 	else{
 		printf("%s\n", auxDir->value);
 	}
+	free(path);
 	return;
 }
 
 struct nodeAVL* traverseFind(char *dir, linkAVL x){
 	int comp;
+	struct nodeAVL *auxNode;
 	if(x == NULL){
+		auxNode = createNodeAVL("", "");
 		printf(NOT_FOUND);
-		return NULL;
+		return auxNode;
 	}
 	comp = strcmp(x->node->dirName, dir);
 	if(comp == 0){

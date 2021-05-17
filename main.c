@@ -16,7 +16,6 @@ int main(){
 	linkAVL rootAVL = initializeAVL();
 
 	do{
-		printf(PROMPT);
 		state = commandHub(rootAVL, rootDLL);
 	}while(state == CONTINUE);
 

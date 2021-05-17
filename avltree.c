@@ -83,6 +83,15 @@ int balanceNode(linkAVL x){
   if(x == NULL){
     return 0;
   }
+  if(x->left->node == NULL && x->right->node != NULL){
+    return height(x->right->node);
+  }
+  if(x->left->node != NULL && x->right->node == NULL){
+    return height(x->left->node);
+  }
+  else if(x->left->node == NULL && x->right->node == NULL){
+    return 0;
+  }
   return height(x->left->node) - height(x->right->node);
 }
 
@@ -114,8 +123,16 @@ linkAVL balanceAVL(linkAVL x){
   return x;
 }
 
+
 linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode){
-  if(x->node == NULL || x == NULL || strcmp("", x->node->dirName) == 0){
+  /*if(x == NULL){
+    x = initializeAVL();
+  }
+  if(x->node == NULL){
+    x->node = createNodeAVL("", "");
+    x->node->tree = initializeAVL();
+  }*/
+  if(strcmp("", x->node->dirName) == 0 || strcmp(newNode->dirName, x->node->dirName) == 0){
     x->node = newNode;
     return x;
   }

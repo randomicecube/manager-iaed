@@ -14,9 +14,6 @@
 /* the program can continue - the command wasn't quit */
 #define CONTINUE 1
 
-/* prompt macro */
-#define PROMPT "? "
-
 /* command strings */
 #define HELP "help"
 #define QUIT "quit"
@@ -86,7 +83,7 @@ void del();
 int commandHub();
 void readValue(char *s);
 void readPath(char *s);
-struct nodeAVL* traverseSet(char *dir, linkAVL x, Dlist *dll);
+struct nodeAVL* setAux(char *dir, linkAVL x, Dlist *dll);
 struct nodeAVL* traverseFind(char *dir, linkAVL x);
 
 /* general DLL-related function prototypes */
