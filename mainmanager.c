@@ -29,11 +29,13 @@ void set(linkAVL x, Dlist *dll){
 	Dlist *dirDLL = dll;
 	path = (char*)malloc(sizeof(char)*MEM_AMOUNT);
 	val = (char*)malloc(sizeof(char)*MEM_AMOUNT);
+	getchar();
 	readPath(path);
 	readValue(val);
 	dir = strtok(path, "/");
 	while(dir != NULL){
 		auxDir = setAux(dir, auxTree, dirDLL);
+		printf("the directory i just added is: %s\n", auxTree->node->dirName);
 		dirDLL = auxDir->subDirectories;
 		auxTree = auxDir->tree;
 		dir = strtok(NULL, "/");
@@ -59,6 +61,7 @@ void find(linkAVL x){
 	struct nodeAVL *auxDir;
 	linkAVL auxTree = x;
 	path = (char*)malloc(sizeof(char)*MEM_AMOUNT);
+	getchar();
 	scanf("%s", path);
 	dir = strtok(path, "/");
 	while(dir != NULL){
@@ -99,15 +102,60 @@ struct nodeAVL* traverseFind(char *dir, linkAVL x){
 	}
 }
 
+void list(linkAVL x){
+	char c, *dir, *path = (char*)malloc(sizeof(char)*MEM_AMOUNT);
+	struct nodeAVL* auxDir;
+	linkAVL auxTree = x;
+	int skip = 0;
+	if((c = getchar()) != '\n' && c != EOF){
+		scanf("%s", path);
+		dir = strtok(path, "/");
+	}
+	else{
+		skip = 1;
+		strcpy(path, "");
+	}
+	while(skip == 0 && dir != NULL){
+		auxDir = traverseList(dir, auxTree);
+		if(strcmp(auxDir->dirName, "") == 0){
+			return;
+		}
+		dir = strtok(NULL, "/");
+		auxTree = auxDir->tree;
+	}
+	traverseListSubPath(auxTree);
+	free(path);
+	return;
+}
 
-/* -------------------- */
-/* missing print() here */
-/* -------------------- */
-/*
-void find(){
-	char *path = (char*)malloc(sizeof(char)*MEM_AMOUNT);
-	char *value, *dir;
-	readPath(path);
-	dir = strtok(path, )
+struct nodeAVL* traverseList(char *dir, linkAVL x){
+	int comp;
+	struct nodeAVL *auxNode;
+	if(x == NULL){
+		auxNode = createNodeAVL("", "");
+		printf(NOT_FOUND);
+		return auxNode;
+	}
+	comp = strcmp(x->node->dirName, dir);
+	if(comp == 0){
+		return x->node;
+	}
+	else if(comp < 0){
+		return traverseFind(dir, x->right);
+	}
+	else{
+		return traverseFind(dir, x->left);
+	}
+}
 
-} */
+void traverseListSubPath(linkAVL x){
+	if(x == NULL){
+		return;
+	}
+	traverseListSubPath(x->left);
+	if(strcmp(x->node->dirName, "") != 0){
+		printf("%s\n", x->node->dirName);
+	}
+	traverseListSubPath(x->right);
+	return;
+}

@@ -125,13 +125,6 @@ linkAVL balanceAVL(linkAVL x){
 
 
 linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode){
-  /*if(x == NULL){
-    x = initializeAVL();
-  }
-  if(x->node == NULL){
-    x->node = createNodeAVL("", "");
-    x->node->tree = initializeAVL();
-  }*/
   if(strcmp("", x->node->dirName) == 0 || strcmp(newNode->dirName, x->node->dirName) == 0){
     x->node = newNode;
     if(x->left == NULL){

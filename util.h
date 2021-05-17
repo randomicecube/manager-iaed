@@ -4,6 +4,8 @@
  * Description: Header file containing general macros and prototypes, structs
  */
 
+/* ------------------------------MACROS/DEFINES----------------------------- */
+
 /* the command can have at most 6 characters + '\0' */
 #define MAX_COMMAND_SIZE 7
 /* initial "to-be stored" memory amount for the input */
@@ -38,6 +40,8 @@
 #define NO_DATA "no data\n"
 #define NOT_FOUND "not found\n"
 
+/* ---------------------------------STRUCTS--------------------------------- */
+
 /* DLL node struct */
 struct nodeDLL{
   char *value;
@@ -70,8 +74,14 @@ struct treeAVL{
 
 typedef struct treeAVL* linkAVL;
 
-/* Function prototypes */
+/* -------------------------------PROTOTYPES-------------------------------- */
 
+/* functions related to redirecting commands/reading input */
+int commandHub();
+void readValue(char *s);
+void readPath(char *s);
+
+/* command "main" functions */
 void help();
 void set(linkAVL tree, Dlist *dll);
 void print(linkAVL tree, Dlist *dll);
@@ -80,11 +90,11 @@ void list();
 void search();
 void del();
 
-int commandHub();
-void readValue(char *s);
-void readPath(char *s);
+/* command aux functions */
 struct nodeAVL* setAux(char *dir, linkAVL x, Dlist *dll);
 struct nodeAVL* traverseFind(char *dir, linkAVL x);
+struct nodeAVL* traverseList(char *dir, linkAVL x);
+void traverseListSubPath(linkAVL x);
 
 /* general DLL-related function prototypes */
 link createNodeDLL(char *s);
