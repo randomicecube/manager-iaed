@@ -49,8 +49,6 @@ struct nodeAVL* setAux(char *dir, linkAVL x, Dlist *dll){
 	insertTailDLL(dll->head, dll->tail, dir);
 	newNodeAVL = createNodeAVL("", dir);
 	newNodeAVL->tree = initializeAVL();
-	x->left = initializeAVL();
-	x->right = initializeAVL();
 	newNodeAVL->subDirectories = initializeDLL();
 	x = insertAVL(x, newNodeAVL);
 	return newNodeAVL;

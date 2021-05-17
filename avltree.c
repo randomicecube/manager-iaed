@@ -134,6 +134,12 @@ linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode){
   }*/
   if(strcmp("", x->node->dirName) == 0 || strcmp(newNode->dirName, x->node->dirName) == 0){
     x->node = newNode;
+    if(x->left == NULL){
+      x->left = initializeAVL();
+    }
+    if(x->right == NULL){
+      x->right = initializeAVL();
+    }
     return x;
   }
   if(strcmp(x->node->dirName, newNode->dirName) > 0){
