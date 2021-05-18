@@ -35,10 +35,10 @@ void set(linkAVL x, Dlist *dll){
 	readValue(val);
 	dir = strtok(path, "/");
 	while(dir != NULL){
+		printf("dir is: %s\n", dir);
 		auxDir = setAux(dir, auxTree, dirDLL);
 		dirDLL = auxDir->subDirectories;
 		auxTree = auxDir->tree;
-		if(auxDir->tree)
 		dir = strtok(NULL, "/");
 	}
 	strcpy(auxDir->value, val);
@@ -77,15 +77,22 @@ void print(linkAVL x, Dlist *dll){
 
 /* find command - prints the value stored within a path */
 void find(linkAVL x){
-	char *path, *dir;
+	char c, *path, *dir;
 	linkAVL auxTree = x;
 	struct nodeAVL *auxDir = x->node;
+	int skip = 0;
 	path = (char*)malloc(sizeof(char)*MEM_AMOUNT);
-	readValue(path); /* need to change the name */
-	dir = strtok(path, "/");
-	while(dir != NULL){
+	if((c = getchar()) == '\n' || c == EOF){
+		skip = 1;
+	}
+	else{
+		readValue(path); /* need to change the name */
+		dir = strtok(path, "/");
+	}
+	while(skip == 0 && dir != NULL){
+		printf("dir is: %s\n", dir);
 		auxDir = traverse(FIND_ERROR, dir, auxTree);
-		if(strcmp(auxDir->dirName, "") == 0){
+		if(auxDir == NULL){
 			return;
 		}
 		auxTree = auxDir->tree;
