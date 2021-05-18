@@ -80,7 +80,7 @@ void readPath(char *s);
 /* command "main" functions */
 void help();
 void set(linkAVL tree, Dlist *dll);
-void print(linkAVL tree, Dlist *dll);
+void print(char *s, linkAVL tree, Dlist *dll);
 void find();
 void list();
 void search();

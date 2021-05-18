@@ -38,7 +38,7 @@ int commandHub(linkAVL tree, Dlist *dll){
 		help();
 	}
 	else if(strcmp(command, PRINT) == 0){
-		print(tree, dll);
+		print("", tree, dll);
 	}
 	else if(strcmp(command, SET) == 0) 
 		set(tree, dll);

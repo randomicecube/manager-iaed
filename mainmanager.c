@@ -35,7 +35,6 @@ void set(linkAVL x, Dlist *dll){
 	readValue(val);
 	dir = strtok(path, "/");
 	while(dir != NULL){
-		printf("dir is: %s\n", dir);
 		auxDir = setAux(dir, auxTree, dirDLL);
 		dirDLL = auxDir->subDirectories;
 		auxTree = auxDir->tree;
@@ -60,16 +59,18 @@ struct nodeAVL* setAux(char*dir, linkAVL x, Dlist *dll){
 }
 
 /* print command - prints all paths and values */
-void print(linkAVL x, Dlist *dll){
-	Dlist *auxDLL = dll;
+void print(char *s, linkAVL x, Dlist *dll){
 	struct nodeAVL *auxNode;
 	linkAVL auxTree = x;
 	if(auxTree->node != NULL){
-		for(auxNode = auxDLL->head; auxNode != NULL; auxNode = auxNode->next){
-			if(strcmp(auxNode->tree->node->dirName, "") == 0){
-				printf("%s %s\n", auxNode->dirName, auxNode->value);
+		for(auxNode = dll->head; auxNode != NULL; auxNode = auxNode->next){
+			if(strcmp("", s) != 0 && strcmp(s, auxNode->dirName) != 0){
+				printf("/%s", s);
 			}
-			print(auxNode->tree, auxNode->subDirectories);
+			print(auxNode->dirName, auxNode->tree, auxNode->subDirectories);
+			if(strcmp(auxNode->tree->node->dirName, "") == 0){
+				printf("/%s %s\n", auxNode->dirName, auxNode->value);
+			}
 		}
 	}
 	return;
