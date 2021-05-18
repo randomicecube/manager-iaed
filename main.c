@@ -26,7 +26,7 @@ int main(){
 
 /* Hub that redirects the command to its respective functions */
 int commandHub(linkAVL tree, Dlist *dll){
-	char *command = (char*)malloc(sizeof(char)*MAX_COMMAND_SIZE);
+	char *command = (char*)malloc(sizeof(char)*MAX_COMMAND_SIZE), *auxStr;
 	scanf("%s", command);
 
 	if(strcmp(command, QUIT) == 0){
@@ -38,16 +38,19 @@ int commandHub(linkAVL tree, Dlist *dll){
 		help();
 	}
 	else if(strcmp(command, PRINT) == 0){
-		print("", tree, dll);
+		auxStr = (char *)malloc(sizeof(char)*MEM_AMOUNT);
+		strcpy(auxStr, "");
+		print(auxStr, tree, dll);
+		free(auxStr);
 	}
 	else if(strcmp(command, SET) == 0) 
 		set(tree, dll);
 	else if(strcmp(command, FIND) == 0) 
 		find(tree);
 	else if(strcmp(command, LIST) == 0) 
-		list(tree); /*
+		list(tree);
 	else if(strcmp(command, SEARCH) == 0) 
-		search();
+		search(tree, dll);/*
 	else if(strcmp(command, DELETE) == 0) 
 		del(); */
 	
@@ -55,30 +58,10 @@ int commandHub(linkAVL tree, Dlist *dll){
 	return CONTINUE;
 }
 
-void readPath(char *s){
-	int i = 0, currentMem = MEM_AMOUNT;
-	char c;
-	while((c = getchar()) != ' ' && c != '\t'){
-		if(i == currentMem){
-			currentMem = 2*currentMem;
-			s = (char*)realloc(s, sizeof(char)*currentMem);
-		}
-		*(s + i++) = c;
-	}
-	*(s + i) = '\0';
-	return;
-}
-
 void readValue(char *s){
-	int i = 0, currentMem = MEM_AMOUNT;
+	int i = 0;
 	char c;
-	while((c = getchar()) != EOF && c != '\n'){
-		if(i == currentMem){
-			currentMem = 2*currentMem;
-			s = (char*)realloc(s, sizeof(char)*currentMem);
-		}
-		*(s + i++) = c;
-	}
+	for(c = getchar(); c != EOF && c != '\n'; *(s + i++) = c, c = getchar());
 	*(s + i) = '\0';
 	return;
 }

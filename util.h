@@ -40,7 +40,9 @@
 #define NO_DATA "no data\n"
 #define NOT_FOUND "not found\n"
 #define FIND_ERROR 0
+#define FAIL 0
 #define NOT_FIND_ERROR 1
+#define SUCCESS 1
 
 /* ---------------------------------STRUCTS--------------------------------- */
 
@@ -75,20 +77,20 @@ typedef struct Dlist{
 /* functions related to redirecting commands/reading input */
 int commandHub();
 void readValue(char *s);
-void readPath(char *s);
 
 /* command "main" functions */
 void help();
 void set(linkAVL tree, Dlist *dll);
 void print(char *s, linkAVL tree, Dlist *dll);
-void find();
-void list();
+void find(linkAVL x);
+void list(linkAVL x);
 void search();
 void del();
 
 /* command aux functions */
 struct nodeAVL* setAux(char *dir, linkAVL x, Dlist *dll);
 void traverseListSubPath(linkAVL x);
+int searchAux(char *bleh, char *s, linkAVL x, Dlist *dll);
 
 /* general DLL-related function prototypes */
 void insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir);

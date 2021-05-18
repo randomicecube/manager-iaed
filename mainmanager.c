@@ -31,7 +31,8 @@ void set(linkAVL x, Dlist *dll){
 	path = (char*)malloc(sizeof(char)*MEM_AMOUNT);
 	val = (char*)malloc(sizeof(char)*MEM_AMOUNT);
 	getchar();
-	readPath(path);
+	scanf("%s", path);
+	getchar();
 	readValue(val);
 	dir = strtok(path, "/");
 	while(dir != NULL){
@@ -52,27 +53,37 @@ struct nodeAVL* setAux(char*dir, linkAVL x, Dlist *dll){
 		newNodeAVL = createNodeAVL("", dir);
 		newNodeAVL->tree = initializeAVL();
 		newNodeAVL->subDirectories = initializeDLL();
+		insertTailDLL(dll, newNodeAVL);
 	}
-	insertTailDLL(dll, newNodeAVL);
 	x = insertAVL(x, newNodeAVL);
 	return newNodeAVL;
 }
 
 /* print command - prints all paths and values */
+/* WARNING ----------------------------------- */
+/* this function needs a thorough cleansing */
+/* WARNING ----------------------------------- */
 void print(char *s, linkAVL x, Dlist *dll){
 	struct nodeAVL *auxNode;
+	char *auxStr, *tempS = (char*)malloc(sizeof(char)*(strlen(s)+1));
 	linkAVL auxTree = x;
+	strcpy(tempS, s);
 	if(auxTree->node != NULL){
 		for(auxNode = dll->head; auxNode != NULL; auxNode = auxNode->next){
-			if(strcmp("", s) != 0 && strcmp(s, auxNode->dirName) != 0){
-				printf("/%s", s);
+			auxStr = (char*)malloc(sizeof(char)*(strlen(auxNode->dirName)+2));
+			auxStr[0] = '\0';
+			strcat(auxStr, "/");
+			strcat(auxStr, auxNode->dirName);
+			strcat(s, auxStr);
+			free(auxStr);
+			if(strcmp(auxNode->value, "") != 0){
+				printf("%s %s\n", s, auxNode->value);
 			}
-			print(auxNode->dirName, auxNode->tree, auxNode->subDirectories);
-			if(strcmp(auxNode->tree->node->dirName, "") == 0){
-				printf("/%s %s\n", auxNode->dirName, auxNode->value);
-			}
+			print(s, auxNode->tree, auxNode->subDirectories);
+			strcpy(s, tempS);
 		}
 	}
+	free(tempS);
 	return;
 }
 
@@ -91,7 +102,6 @@ void find(linkAVL x){
 		dir = strtok(path, "/");
 	}
 	while(skip == 0 && dir != NULL){
-		printf("dir is: %s\n", dir);
 		auxDir = traverse(FIND_ERROR, dir, auxTree);
 		if(auxDir == NULL){
 			return;
@@ -146,4 +156,42 @@ void traverseListSubPath(linkAVL x){
 	}
 	traverseListSubPath(x->right);
 	return;
+}
+
+/* search command - searches the path with a given value */ 
+void search(linkAVL x, Dlist *dll){
+	char *value = (char *)malloc(sizeof(char)*MEM_AMOUNT);
+	char *rightPath = (char *)malloc(sizeof(char)*MEM_AMOUNT);
+	rightPath[0] = '\0';
+	getchar();
+	readValue(value);
+	if(searchAux(rightPath, value, x, dll) == FAIL){
+		printf(NOT_FOUND);
+	}
+	else{
+		printf("%s\n", rightPath);
+	}
+	free(rightPath);
+	free(value);
+	return;
+}
+
+
+int searchAux(char *bleh, char *s, linkAVL x, Dlist *dll){
+	struct nodeAVL *auxNode;
+	char *auxStr;
+	linkAVL auxTree = x;
+	if(auxTree->node != NULL){
+		for(auxNode = dll->head; auxNode != NULL; auxNode = auxNode->next){
+			if(strcmp(auxNode->value, s) == 0 || searchAux(bleh, s, auxNode->tree, auxNode->subDirectories) == SUCCESS){
+				auxStr = (char*)malloc(sizeof(char)*(strlen(s)+strlen(auxNode->dirName)+1));
+				strcpy(auxStr, "/");
+				strcat(auxStr, auxNode->dirName);
+				strcat(auxStr, bleh);
+				strcpy(bleh, auxStr);
+				return SUCCESS;
+			}
+		}
+	}
+	return FAIL;
 }
