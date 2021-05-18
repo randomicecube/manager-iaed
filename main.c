@@ -30,22 +30,17 @@ int commandHub(linkAVL tree, Dlist *dll){
 	scanf("%s", command);
 
 	if(strcmp(command, QUIT) == 0){
-		/* missing here: freeing function(s) for the data strutures*/
+		/* missing here: freeing function(s) for the data strutures */
 		free(command);
 		return EXIT;
 	}
 	else if(strcmp(command, HELP) == 0){
 		help();
-		free(command);
-		return CONTINUE;
 	}
-	/* else if(strcmp(command, PRINT) == 0){
+	else if(strcmp(command, PRINT) == 0){
 		print(tree, dll);
-		free(command);
-		return CONTINUE;
-	} */
-
-	if(strcmp(command, SET) == 0) 
+	}
+	else if(strcmp(command, SET) == 0) 
 		set(tree, dll);
 	else if(strcmp(command, FIND) == 0) 
 		find(tree);

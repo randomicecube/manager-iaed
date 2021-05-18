@@ -5,6 +5,5 @@ set tests/test01.in primeiro teste
 set tests/test02.in segundo teste
 set Makefile construção do projeto
 set guidelines.md orientações para a escrita do projeto
-list
-list tests
+print
 quit

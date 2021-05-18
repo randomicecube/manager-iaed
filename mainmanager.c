@@ -22,10 +22,11 @@ void help(){
 	return;
 }
 
+/* set command - adds or modifies the to-be-stored value */
 void set(linkAVL x, Dlist *dll){
 	char *path, *val, *dir;
-	struct nodeAVL *auxDir;
 	linkAVL auxTree = x;
+	struct nodeAVL *auxDir = x->node;
 	Dlist *dirDLL = dll;
 	path = (char*)malloc(sizeof(char)*MEM_AMOUNT);
 	val = (char*)malloc(sizeof(char)*MEM_AMOUNT);
@@ -37,6 +38,7 @@ void set(linkAVL x, Dlist *dll){
 		auxDir = setAux(dir, auxTree, dirDLL);
 		dirDLL = auxDir->subDirectories;
 		auxTree = auxDir->tree;
+		if(auxDir->tree)
 		dir = strtok(NULL, "/");
 	}
 	strcpy(auxDir->value, val);
@@ -45,25 +47,41 @@ void set(linkAVL x, Dlist *dll){
 	return;
 }
 
-struct nodeAVL* setAux(char *dir, linkAVL x, Dlist *dll){
+struct nodeAVL* setAux(char*dir, linkAVL x, Dlist *dll){
 	struct nodeAVL *newNodeAVL = traverse(NOT_FIND_ERROR, dir, x);
-	insertTailDLL(dll->head, dll->tail, dir);
-	if(newNodeAVL == NULL){
+	if(newNodeAVL==NULL){
 		newNodeAVL = createNodeAVL("", dir);
 		newNodeAVL->tree = initializeAVL();
 		newNodeAVL->subDirectories = initializeDLL();
 	}
+	insertTailDLL(dll, newNodeAVL);
 	x = insertAVL(x, newNodeAVL);
 	return newNodeAVL;
 }
 
+/* print command - prints all paths and values */
+void print(linkAVL x, Dlist *dll){
+	Dlist *auxDLL = dll;
+	struct nodeAVL *auxNode;
+	linkAVL auxTree = x;
+	if(auxTree->node != NULL){
+		for(auxNode = auxDLL->head; auxNode != NULL; auxNode = auxNode->next){
+			if(strcmp(auxNode->tree->node->dirName, "") == 0){
+				printf("%s %s\n", auxNode->dirName, auxNode->value);
+			}
+			print(auxNode->tree, auxNode->subDirectories);
+		}
+	}
+	return;
+}
+
+/* find command - prints the value stored within a path */
 void find(linkAVL x){
 	char *path, *dir;
-	struct nodeAVL *auxDir;
 	linkAVL auxTree = x;
+	struct nodeAVL *auxDir = x->node;
 	path = (char*)malloc(sizeof(char)*MEM_AMOUNT);
-	getchar();
-	scanf("%s", path);
+	readValue(path); /* need to change the name */
 	dir = strtok(path, "/");
 	while(dir != NULL){
 		auxDir = traverse(FIND_ERROR, dir, auxTree);
@@ -83,6 +101,7 @@ void find(linkAVL x){
 	return;
 }
 
+/* list command - lists all the elements within a given subpath */
 void list(linkAVL x){
 	char c, *dir, *path = (char*)malloc(sizeof(char)*MEM_AMOUNT);
 	struct nodeAVL* auxDir;

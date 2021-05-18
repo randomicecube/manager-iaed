@@ -11,34 +11,23 @@
 
 /* for simplicity's sake, I'll refer to a doubly linked list as a DLL */
 
-/* creates a new, to-be-inserted, node */
-link createNodeDLL(char *s){
-  link newNode = (link)malloc(sizeof(struct nodeDLL));
-  newNode->value = (char*)malloc(sizeof(char)*(strlen(s) + 1));
-  strcpy(newNode->value, s);
-  newNode->prev = NULL;
-  newNode->next = NULL;
-  return newNode;  
-}
-
 /* inserts the node as the new tail of the DLL */
-void insertTailDLL(link head, link tail, char *s){
-  link newNode = createNodeDLL(s);
-  if(head == NULL){
-    head = newNode;
+void insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir){
+  nodeDir->next = NULL;
+  nodeDir->prev = dll->tail;
+  if(dll->head == NULL){
+    dll->head = nodeDir;
   }
-  if(tail != NULL){
-    tail->next = newNode;
+  if(dll->tail != NULL){
+    dll->tail->next = nodeDir;
   }
-  newNode->next = NULL;
-  newNode->prev = tail;
-  tail = newNode;
+  dll->tail = nodeDir;
   return;
 }
 
 /* looks up the node containing a certain value (s) on the DLL */
-link lookupDLL(link head, char *s){
-  link aux;
+struct nodeAVL *lookupDLL(struct nodeAVL *head, char *s){
+  struct nodeAVL *aux;
   for(aux = head; aux != NULL; aux = aux->next){
     if(strcmp(s, aux->value)==0){
       return aux;
@@ -48,8 +37,8 @@ link lookupDLL(link head, char *s){
 }
 
 /* deletes a node from the DLL */
-link deleteNodeDLL(link head, char *s){
-  link x, prev;
+struct nodeAVL *deleteNodeDLL(struct nodeAVL *head, char *s){
+  struct nodeAVL *x, *prev;
   int found = 0;
   for(x = head, prev = NULL; x != NULL && !found; prev = x, x = x->next){
     if(strcmp(x->value, s)==0){
@@ -67,8 +56,8 @@ link deleteNodeDLL(link head, char *s){
 }
 
 /* prints the values of each node, by their order in the DLL */
-void printDLL(link head){
-  link aux;
+void printDLL(struct nodeAVL *head){
+  struct nodeAVL *aux;
   for(aux = head; aux != NULL; aux = aux->next){
     printf("%s\n", aux->value);
   }
@@ -76,7 +65,7 @@ void printDLL(link head){
 }
 
 /* frees a node */
-void freeNodeDLL(link x){
+void freeNodeDLL(struct nodeAVL *x){
   if(x->next != NULL){
     x->next->prev = x->prev;
   }
@@ -90,8 +79,8 @@ void freeNodeDLL(link x){
 
 /* frees the DLL */
 
-void freeDLL(link head){
-  link x;
+void freeDLL(struct nodeAVL *head){
+  struct nodeAVL *x;
   if(head == NULL){
     return;
   }

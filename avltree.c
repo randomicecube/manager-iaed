@@ -11,7 +11,6 @@
 
 struct nodeAVL* createNodeAVL(char *s, char *name){
   struct nodeAVL* newNode = (struct nodeAVL *)malloc(sizeof(struct nodeAVL));
-  Dlist *auxList;
   if(strcmp("", s) != 0){
     newNode->value = (char*)malloc(sizeof(char)*(strlen(s)+1));
   }
@@ -27,8 +26,9 @@ struct nodeAVL* createNodeAVL(char *s, char *name){
   strcpy(newNode->value, s);
   strcpy(newNode->dirName, name);
   newNode->height = 1;
-  auxList = initializeDLL();
-  newNode->subDirectories = auxList;
+  newNode->subDirectories = initializeDLL();
+  newNode->prev = NULL;
+  newNode->next = NULL;
   return newNode;
 }
 

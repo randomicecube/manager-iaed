@@ -9,7 +9,7 @@
 /* the command can have at most 6 characters + '\0' */
 #define MAX_COMMAND_SIZE 7
 /* initial "to-be stored" memory amount for the input */
-#define MEM_AMOUNT 1024 
+#define MEM_AMOUNT 4096 
 
 /* the program must stop - the command was quit */
 #define EXIT 0
@@ -44,27 +44,16 @@
 
 /* ---------------------------------STRUCTS--------------------------------- */
 
-/* DLL node struct */
-struct nodeDLL{
-  char *value;
-  struct nodeDLL *prev, *next;
-};
-
-typedef struct nodeDLL* link;
-
-/* DLL struct */
-typedef struct Dlist{
-  link head, tail;
-}Dlist;
-
 struct treeAVL;
+struct Dlist;
 
 /* AVL node struct */
 struct nodeAVL{
   char *value, *dirName;
   int height;
-  Dlist *subDirectories;
+  struct Dlist *subDirectories;
   struct treeAVL *tree;
+  struct nodeAVL *prev, *next;
 };
 
 /* AVL tree struct */
@@ -75,6 +64,11 @@ struct treeAVL{
 };
 
 typedef struct treeAVL* linkAVL;
+
+/* DLL struct */
+typedef struct Dlist{
+  struct nodeAVL *head, *tail;
+}Dlist;
 
 /* -------------------------------PROTOTYPES-------------------------------- */
 
@@ -97,13 +91,12 @@ struct nodeAVL* setAux(char *dir, linkAVL x, Dlist *dll);
 void traverseListSubPath(linkAVL x);
 
 /* general DLL-related function prototypes */
-link createNodeDLL(char *s);
-void insertTailDLL(link head, link tail, char *s);
-link lookupDLL(link head, char *s);
-link deleteNodeDLL(link head, char *s);
-void printDLL(link head);
-void freeNodeDLL(link x);
-void freeDLL(link head);
+void insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir);
+struct nodeAVL* lookupDLL(struct nodeAVL *head, char *s);
+struct nodeAVL* deleteNodeDLL(struct nodeAVL *head, char *s);
+void printDLL(struct nodeAVL *head);
+void freeNodeDLL(struct nodeAVL *x);
+void freeDLL(struct nodeAVL *head);
 Dlist* initializeDLL();
 
 /* general AVL-tree-related function prototypes */
