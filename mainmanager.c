@@ -176,7 +176,9 @@ void search(linkAVL x, Dlist *dll){
 	return;
 }
 
-
+/* WARNING ----------------------------------- */
+/* this function needs a thorough cleansing */
+/* WARNING ----------------------------------- */
 int searchAux(char *bleh, char *s, linkAVL x, Dlist *dll){
 	struct nodeAVL *auxNode;
 	char *auxStr;
@@ -194,4 +196,36 @@ int searchAux(char *bleh, char *s, linkAVL x, Dlist *dll){
 		}
 	}
 	return FAIL;
+}
+
+/* delete - deletes a path and all its subpaths */
+void del(linkAVL x, Dlist *dll){
+	char c, *dir, *path = (char*)malloc(sizeof(char)*MEM_AMOUNT);
+	linkAVL auxTree = x, prevTree = x;
+	struct nodeAVL *auxDir = x->node;
+
+	if((c = getchar()) != '\n' &&  c != EOF){
+		scanf("%s", path);
+	}
+	else{
+		freeDLL(dll->head);
+		freeAVL(x);
+		free(path);
+		return;
+	}
+	dir = strtok(path, "/");
+	while(dir != NULL){
+		prevTree = auxTree;
+		/* change FIND_ERROR to something else */
+		auxDir = traverse(FIND_ERROR, dir, auxTree);
+		if(auxDir == NULL){
+			return;
+		}
+		auxTree = auxDir->tree;
+		dir = strtok(NULL, "/");
+	}
+	deleteNodeDLL(prevTree->node->subDirectories->head, auxDir->dirName);
+	freeNodeAVL(auxDir);
+	free(path);
+	return;
 }

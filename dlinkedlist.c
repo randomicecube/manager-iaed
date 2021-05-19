@@ -72,20 +72,21 @@ void freeNodeDLL(struct nodeAVL *x){
   if(x->prev != NULL){
     x->prev->next = x->next;
   }
+  free(x->tree);
+  free(x->dirName);
   free(x->value);
   free(x);
   return;
 }
 
 /* frees the DLL */
-
 void freeDLL(struct nodeAVL *head){
   struct nodeAVL *x;
   if(head == NULL){
     return;
   }
   for(x = head; x != NULL; x = x->next){
-    freeNodeDLL(x);
+    free(x);
   }
   return;
 }

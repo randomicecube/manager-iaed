@@ -30,7 +30,10 @@ int commandHub(linkAVL tree, Dlist *dll){
 	scanf("%s", command);
 
 	if(strcmp(command, QUIT) == 0){
-		/* missing here: freeing function(s) for the data strutures */
+		freeAVL(tree);
+		freeDLL(dll->head);
+		free(tree);
+		free(dll);
 		free(command);
 		return EXIT;
 	}
@@ -50,9 +53,9 @@ int commandHub(linkAVL tree, Dlist *dll){
 	else if(strcmp(command, LIST) == 0) 
 		list(tree);
 	else if(strcmp(command, SEARCH) == 0) 
-		search(tree, dll);/*
+		search(tree, dll);
 	else if(strcmp(command, DELETE) == 0) 
-		del(); */
+		del(tree, dll);
 	
 	free(command);
 	return CONTINUE;

@@ -80,12 +80,12 @@ void readValue(char *s);
 
 /* command "main" functions */
 void help();
-void set(linkAVL tree, Dlist *dll);
-void print(char *s, linkAVL tree, Dlist *dll);
+void set(linkAVL x, Dlist *dll);
+void print(char *s, linkAVL x, Dlist *dll);
 void find(linkAVL x);
 void list(linkAVL x);
-void search();
-void del();
+void search(linkAVL x, Dlist *dll);
+void del(linkAVL x, Dlist *dll);
 
 /* command aux functions */
 struct nodeAVL* setAux(char *dir, linkAVL x, Dlist *dll);
@@ -113,7 +113,6 @@ int balanceNode(linkAVL node);
 linkAVL balanceAVL(linkAVL x);
 linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode);
 struct nodeAVL* traverse(int func, char *dir, linkAVL x);
-void freeAVL(linkAVL node);
+void freeAVL(linkAVL tree);
 linkAVL initializeAVL();
-/*
-void freeNodeAVL(struct nodeAVL *node); */
+void freeNodeAVL(struct nodeAVL *node);

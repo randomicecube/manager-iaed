@@ -29,6 +29,7 @@ struct nodeAVL* createNodeAVL(char *s, char *name){
   newNode->subDirectories = initializeDLL();
   newNode->prev = NULL;
   newNode->next = NULL;
+  newNode->tree = NULL;
   return newNode;
 }
 
@@ -166,25 +167,22 @@ struct nodeAVL* traverse(int func, char *dir, linkAVL x){
 	}
 }
 
-/*
-void freeAVL(linkAVL node){
-  if(node->left != NULL){
-  freeAVL(node->left);
-  freeAVL(node->right);
-  freeNodeAVL(node);
-}
-
-void freeNodeAVL(struct nodeAVL *node){
-  if(node == NULL){
-    return;
+void freeAVL(linkAVL tree){
+  if(tree != NULL){
+    freeAVL(tree->left);
+    freeAVL(tree->right);
+    if(tree->node != NULL)freeNodeAVL(tree->node);
   }
-  freeNodeAVL(node->right);
-  freeNodeAVL(node->left);
+  return;
+}
+void freeNodeAVL(struct nodeAVL *node){
+  freeAVL(node->tree);
   free(node->value);
   free(node->dirName);
-  freeDLL(subDirectories);
+  freeDLL(node->subDirectories->head);
+  free(node);
   return;
-} */
+}
 
 linkAVL initializeAVL(){
   linkAVL newTree = (linkAVL)malloc(sizeof(struct treeAVL));
