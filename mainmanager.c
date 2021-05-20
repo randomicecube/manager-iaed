@@ -42,6 +42,7 @@ void set(linkAVL x, Dlist *dll){
 		dir = strtok(NULL, "/");
 	}
 	strcpy(auxDir->value, val);
+	free(dir);
 	free(path);
 	free(val);
 	return;
@@ -191,6 +192,7 @@ int searchAux(char *bleh, char *s, linkAVL x, Dlist *dll){
 				strcat(auxStr, auxNode->dirName);
 				strcat(auxStr, bleh);
 				strcpy(bleh, auxStr);
+				free(auxStr);
 				return SUCCESS;
 			}
 		}
@@ -202,19 +204,22 @@ int searchAux(char *bleh, char *s, linkAVL x, Dlist *dll){
 void del(linkAVL x, Dlist *dll){
 	char c, *dir, *path = (char*)malloc(sizeof(char)*MEM_AMOUNT);
 	linkAVL auxTree = x, prevTree = x;
+	Dlist *auxDLL = dll;
 	struct nodeAVL *auxDir = x->node;
 
 	if((c = getchar()) != '\n' &&  c != EOF){
 		scanf("%s", path);
 	}
 	else{
-		freeDLL(dll->head);
 		freeAVL(x);
+		freeDLL(dll);
+		free(dll);
 		free(path);
 		return;
 	}
 	dir = strtok(path, "/");
 	while(dir != NULL){
+		if(auxTree != x) auxDLL = auxDir->subDirectories;
 		prevTree = auxTree;
 		/* change FIND_ERROR to something else */
 		auxDir = traverse(FIND_ERROR, dir, auxTree);
@@ -224,8 +229,9 @@ void del(linkAVL x, Dlist *dll){
 		auxTree = auxDir->tree;
 		dir = strtok(NULL, "/");
 	}
-	deleteNodeDLL(prevTree->node->subDirectories->head, auxDir->dirName);
-	freeNodeAVL(auxDir);
+	prevTree = deleteNodeAVL(auxDir, prevTree);
+	auxDLL = deleteNodeDLL(auxDLL, auxDir->dirName);
+	free(dir);
 	free(path);
 	return;
 }

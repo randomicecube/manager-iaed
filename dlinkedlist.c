@@ -25,67 +25,33 @@ void insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir){
   return;
 }
 
-/* looks up the node containing a certain value (s) on the DLL */
-struct nodeAVL *lookupDLL(struct nodeAVL *head, char *s){
-  struct nodeAVL *aux;
-  for(aux = head; aux != NULL; aux = aux->next){
-    if(strcmp(s, aux->value)==0){
-      return aux;
-    }
-  }
-  return NULL;
-}
-
 /* deletes a node from the DLL */
-struct nodeAVL *deleteNodeDLL(struct nodeAVL *head, char *s){
-  struct nodeAVL *x, *prev;
-  int found = 0;
-  for(x = head, prev = NULL; x != NULL && !found; prev = x, x = x->next){
-    if(strcmp(x->value, s)==0){
-      if(x==head){
-        head = x->next;
+Dlist* deleteNodeDLL(Dlist *dll, char *s){
+  struct nodeAVL *currNode, *prevNode;
+  for(currNode = dll->head, prevNode = NULL; currNode != NULL; prevNode = currNode, currNode = currNode->next){
+    if(strcmp(currNode->dirName, s) == 0){
+      if(currNode == dll->head){
+        if(currNode->next != NULL){
+          dll->head = currNode->next;
+          dll->head->prev = NULL;
+        }
+        else dll->head = NULL;
       }
       else{
-        prev->next = x->next;
+        if(prevNode->next != NULL) prevNode->next = currNode->next;
+        if(currNode->next != NULL) currNode->next->prev = prevNode;
       }
-      freeNodeDLL(x);
-      found++;
+      /* the node itself will be freed afterwards, in freeNodeAVL */
+      return dll;
     }
   }
-  return head;
-}
-
-/* prints the values of each node, by their order in the DLL */
-void printDLL(struct nodeAVL *head){
-  struct nodeAVL *aux;
-  for(aux = head; aux != NULL; aux = aux->next){
-    printf("%s\n", aux->value);
-  }
-  return;
-}
-
-/* frees a node */
-void freeNodeDLL(struct nodeAVL *x){
-  if(x->next != NULL){
-    x->next->prev = x->prev;
-  }
-  if(x->prev != NULL){
-    x->prev->next = x->next;
-  }
-  free(x->tree);
-  free(x->dirName);
-  free(x->value);
-  free(x);
-  return;
+  return dll;
 }
 
 /* frees the DLL */
-void freeDLL(struct nodeAVL *head){
+void freeDLL(Dlist *dll){
   struct nodeAVL *x;
-  if(head == NULL){
-    return;
-  }
-  for(x = head; x != NULL; x = x->next){
+  for(x = dll->head; x != NULL; x = x->next){
     free(x);
   }
   return;

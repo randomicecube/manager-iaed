@@ -32,7 +32,7 @@
 #define SET_INFO "set: Adiciona ou modifica o valor a armazenar.\n"
 #define PRINT_INFO "print: Imprime todos os caminhos e valores.\n"
 #define FIND_INFO "find: Imprime o valor armazenado.\n"
-#define LIST_INFO "list: Lista todos os componentes de um caminho.\n"
+#define LIST_INFO "list: Lista todos os componentes imediatos de um sub-caminho.\n"
 #define SEARCH_INFO "search: Procura o caminho dado um valor.\n"
 #define DELETE_INFO "delete: Apaga um caminho e todos os subcaminhos.\n"
 
@@ -94,16 +94,17 @@ int searchAux(char *bleh, char *s, linkAVL x, Dlist *dll);
 
 /* general DLL-related function prototypes */
 void insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir);
-struct nodeAVL* lookupDLL(struct nodeAVL *head, char *s);
-struct nodeAVL* deleteNodeDLL(struct nodeAVL *head, char *s);
+void lookupDLL(struct nodeAVL *head, struct nodeAVL *x);
+Dlist* deleteNodeDLL(Dlist *dll, char *s);
 void printDLL(struct nodeAVL *head);
 void freeNodeDLL(struct nodeAVL *x);
-void freeDLL(struct nodeAVL *head);
+void freeDLL(Dlist *dll);
 Dlist* initializeDLL();
 
 /* general AVL-tree-related function prototypes */
 struct nodeAVL* createNodeAVL(char *s, char *name);
 int height(struct nodeAVL *node);
+linkAVL max(linkAVL tree);
 linkAVL rotL(linkAVL node);
 linkAVL rotR(linkAVL node);
 linkAVL rotLR(linkAVL node);
@@ -113,6 +114,7 @@ int balanceNode(linkAVL node);
 linkAVL balanceAVL(linkAVL x);
 linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode);
 struct nodeAVL* traverse(int func, char *dir, linkAVL x);
+linkAVL deleteNodeAVL(struct nodeAVL *toDelete, linkAVL tree);
 void freeAVL(linkAVL tree);
 linkAVL initializeAVL();
-void freeNodeAVL(struct nodeAVL *node);
+void freeNodeAVL(linkAVL x);

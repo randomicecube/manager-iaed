@@ -31,10 +31,12 @@ int commandHub(linkAVL tree, Dlist *dll){
 
 	if(strcmp(command, QUIT) == 0){
 		freeAVL(tree);
-		freeDLL(dll->head);
+		free(tree->node);
 		free(tree);
+		tree = NULL;
 		free(dll);
 		free(command);
+		command = NULL;
 		return EXIT;
 	}
 	else if(strcmp(command, HELP) == 0){
