@@ -23,10 +23,10 @@ void help(){
 }
 
 /* set command - adds or modifies the to-be-stored value */
-void set(linkAVL x, Dlist *dll){
+linkAVL set(linkAVL x, Dlist *dll, char *s){
 	char *path, *val, *dir;
 	linkAVL auxTree = x;
-	struct nodeAVL *auxDir = x->node;
+	struct nodeAVL *auxDir = x->node, *auxTraverse;
 	Dlist *dirDLL = dll;
 	path = (char*)malloc(sizeof(char)*MEM_AMOUNT);
 	val = (char*)malloc(sizeof(char)*MEM_AMOUNT);
@@ -37,26 +37,33 @@ void set(linkAVL x, Dlist *dll){
 	dir = strtok(path, "/");
 	while(dir != NULL){
 		auxDir = setAux(dir, auxTree, dirDLL);
+		auxTraverse = traverse(NOT_FIND_ERROR, dir, auxTree);
+		if(auxTree == x && auxTraverse == NULL) x = insertAVL(x, auxDir);
+		else if(auxTraverse == NULL) auxTree = insertAVL(auxTree, auxDir);
 		dirDLL = auxDir->subDirectories;
 		auxTree = auxDir->tree;
 		dir = strtok(NULL, "/");
 	}
-	strcpy(auxDir->value, val);
+	if(auxTree == x){
+		strcpy(s, val);
+	}
+	else{
+		strcpy(auxDir->value, val);
+	}
 	free(dir);
 	free(path);
 	free(val);
-	return;
+	return x;
 }
 
-struct nodeAVL* setAux(char*dir, linkAVL x, Dlist *dll){
+struct nodeAVL *setAux(char*dir, linkAVL x, Dlist *dll){
 	struct nodeAVL *newNodeAVL = traverse(NOT_FIND_ERROR, dir, x);
 	if(newNodeAVL==NULL){
 		newNodeAVL = createNodeAVL("", dir);
 		newNodeAVL->tree = initializeAVL();
 		newNodeAVL->subDirectories = initializeDLL();
-		insertTailDLL(dll, newNodeAVL);
+		dll = insertTailDLL(dll, newNodeAVL);
 	}
-	x = insertAVL(x, newNodeAVL);
 	return newNodeAVL;
 }
 
@@ -89,7 +96,7 @@ void print(char *s, linkAVL x, Dlist *dll){
 }
 
 /* find command - prints the value stored within a path */
-void find(linkAVL x){
+void find(linkAVL x, char *s){
 	char c, *path, *dir;
 	linkAVL auxTree = x;
 	struct nodeAVL *auxDir = x->node;
@@ -109,6 +116,10 @@ void find(linkAVL x){
 		}
 		auxTree = auxDir->tree;
 		dir = strtok(NULL, "/");
+	}
+	if(auxTree == x){
+		printf("%s\n", s);
+		return;
 	}
 	if(strcmp("", auxDir->value) == 0){
 		printf(NO_DATA);
@@ -130,10 +141,8 @@ void list(linkAVL x){
 		scanf("%s", path);
 		dir = strtok(path, "/");
 	}
-	else{
-		skip = 1;
-		strcpy(path, "");
-	}
+	else skip = 1;
+	
 	while(skip == 0 && dir != NULL){
 		auxDir = traverse(NOT_FIND_ERROR, dir, auxTree);
 		if(strcmp(auxDir->dirName, "") == 0){
@@ -152,20 +161,21 @@ void traverseListSubPath(linkAVL x){
 		return;
 	}
 	traverseListSubPath(x->left);
-	if(strcmp(x->node->dirName, "") != 0){
-		printf("%s\n", x->node->dirName);
-	}
+	if(strcmp(x->node->dirName, "") != 0) printf("%s\n", x->node->dirName);
 	traverseListSubPath(x->right);
 	return;
 }
 
 /* search command - searches the path with a given value */ 
-void search(linkAVL x, Dlist *dll){
+void search(linkAVL x, Dlist *dll, char *s){
 	char *value = (char *)malloc(sizeof(char)*MEM_AMOUNT);
 	char *rightPath = (char *)malloc(sizeof(char)*MEM_AMOUNT);
 	rightPath[0] = '\0';
 	getchar();
 	readValue(value);
+	if(strcmp(value, s) == 0){
+		return;
+	}
 	if(searchAux(rightPath, value, x, dll) == FAIL){
 		printf(NOT_FOUND);
 	}
@@ -211,8 +221,9 @@ void del(linkAVL x, Dlist *dll){
 		scanf("%s", path);
 	}
 	else{
-		freeAVL(x);
-		freeDLL(dll);
+		x = freeAVL(x);
+		free(x->node);
+		free(x);
 		free(dll);
 		free(path);
 		return;
@@ -231,6 +242,7 @@ void del(linkAVL x, Dlist *dll){
 	}
 	prevTree = deleteNodeAVL(auxDir, prevTree);
 	auxDLL = deleteNodeDLL(auxDLL, auxDir->dirName);
+	free(auxDir);
 	free(dir);
 	free(path);
 	return;

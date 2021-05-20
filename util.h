@@ -60,8 +60,7 @@ struct nodeAVL{
 
 /* AVL tree struct */
 struct treeAVL{
-  struct treeAVL *left;
-  struct treeAVL *right;
+  struct treeAVL *left, *right;
   struct nodeAVL *node;
 };
 
@@ -75,30 +74,28 @@ typedef struct Dlist{
 /* -------------------------------PROTOTYPES-------------------------------- */
 
 /* functions related to redirecting commands/reading input */
-int commandHub();
+linkAVL commandHub();
 void readValue(char *s);
 
 /* command "main" functions */
 void help();
-void set(linkAVL x, Dlist *dll);
+linkAVL set(linkAVL x, Dlist *dll, char *s);
 void print(char *s, linkAVL x, Dlist *dll);
-void find(linkAVL x);
+void find(linkAVL x, char *s);
 void list(linkAVL x);
-void search(linkAVL x, Dlist *dll);
+void search(linkAVL x, Dlist *dll, char *s);
 void del(linkAVL x, Dlist *dll);
 
 /* command aux functions */
-struct nodeAVL* setAux(char *dir, linkAVL x, Dlist *dll);
+struct nodeAVL *setAux(char *dir, linkAVL x, Dlist *dll);
 void traverseListSubPath(linkAVL x);
 int searchAux(char *bleh, char *s, linkAVL x, Dlist *dll);
 
 /* general DLL-related function prototypes */
-void insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir);
+Dlist* insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir);
 void lookupDLL(struct nodeAVL *head, struct nodeAVL *x);
 Dlist* deleteNodeDLL(Dlist *dll, char *s);
-void printDLL(struct nodeAVL *head);
-void freeNodeDLL(struct nodeAVL *x);
-void freeDLL(Dlist *dll);
+Dlist* freeDLL(Dlist *dll);
 Dlist* initializeDLL();
 
 /* general AVL-tree-related function prototypes */
@@ -109,12 +106,12 @@ linkAVL rotL(linkAVL node);
 linkAVL rotR(linkAVL node);
 linkAVL rotLR(linkAVL node);
 linkAVL rotRL(linkAVL node);
-void updateHeight(linkAVL node);
+linkAVL updateHeight(linkAVL node);
 int balanceNode(linkAVL node);
 linkAVL balanceAVL(linkAVL x);
 linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode);
 struct nodeAVL* traverse(int func, char *dir, linkAVL x);
 linkAVL deleteNodeAVL(struct nodeAVL *toDelete, linkAVL tree);
-void freeAVL(linkAVL tree);
+linkAVL freeAVL(linkAVL tree);
 linkAVL initializeAVL();
-void freeNodeAVL(linkAVL x);
+linkAVL freeNodeAVL(linkAVL x);

@@ -12,7 +12,7 @@
 /* for simplicity's sake, I'll refer to a doubly linked list as a DLL */
 
 /* inserts the node as the new tail of the DLL */
-void insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir){
+Dlist *insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir){
   nodeDir->next = NULL;
   nodeDir->prev = dll->tail;
   if(dll->head == NULL){
@@ -22,7 +22,7 @@ void insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir){
     dll->tail->next = nodeDir;
   }
   dll->tail = nodeDir;
-  return;
+  return dll;
 }
 
 /* deletes a node from the DLL */
@@ -46,15 +46,6 @@ Dlist* deleteNodeDLL(Dlist *dll, char *s){
     }
   }
   return dll;
-}
-
-/* frees the DLL */
-void freeDLL(Dlist *dll){
-  struct nodeAVL *x;
-  for(x = dll->head; x != NULL; x = x->next){
-    free(x);
-  }
-  return;
 }
 
 Dlist* initializeDLL(){
