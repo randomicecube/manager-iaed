@@ -1,17 +1,11 @@
-set ///OwTPp[^CZ`PgJit/WSeG`XdMZB@fqoh/OtjrWL]]wuGdzVJ//HS^_rTIU@iZzV]g///BpbL_S\x[B^iJmz///jGTQ^dijE[d^HhO//yUp\`tetvMXydZH 7879
-set ///j]cQS@`zHeseAnR//]lMHuSFYbOIY_^i///SwByMQk@VWRLQak/@^W\I\@ojYZ\yKT///BjJRADzOJXCmwRr///PFBjQXwHKKtrMRL///mEAEjbTVvIHRMWn/KMkqtPLILwt@WLT//^sJrJOOXmVhVJJC 7858
-set //JoBBHalLyGGnISW//nPiMIGWu^HurY\K 8910
-set ///hzzmcwMonXVezGw/tdPX`eVCqEA\wgj//_giAytAC^QhZxv`///zDMCMRca@^cMDOW/iykHAeIEGNZZUlt///yJ`YT[eGOhLWP\Z//eFnfb[HqxmUl^pR/nB\TxEP[d[RmjWa//JNVLQhajbbFCAFm///eCp@\LuGV]w_ml] 6665
-set ///mhEhcldHFYIM]DX//DxNbZoU^HoioSpV/zJw[mgzfoXhbjed//TUV@PGBbKLJxNab/[OCkpfHdZJvmjLR///QfynLumDDKkn\kE 8750
-set ///CKoW@aSWFrtRgHd//c\wgk@zTPCIqVqA 8199
-set ///_oMD_QnnjNGNZbe/WeSoWbXsDUBCVYU//Xn@axbEFgAweyST 5319
-set //RhQO_CePfKdm_AD//Hwf]nsstqWesmyK 7215
-set ///EUzLj^gD]_Te[fF///[AJDEUAD`\yWgbX 3202
-set //abuym[jJou`IfpU///dluZr[HfYyHBvSj//SP^pdoVwdq_Rnyy///bzo`LXNm`ngFFgj///lxTPnVSWFh]`wsb//\j]A[gow_SyrlTY///\wVkutH^qQQYLJd/lkeGkhIiJIKs_]A///eA^SJ@wIHelXsD\//QKKTS`@XSueVAbJ 1243
-set /L[dwdDrErenWQdZ///bLfXcrLB^WjURhO//@vDQSc]LDESHXdz///yb[aGUTGXDWOnBm//fhCj@xCSWKvVbnV///@lvQzorrGsvDUrF/@sBrK`sYgeSrcSN//HzK`hifPyRawRB^/pla`CaQWCU\`EHt/QsPGczPB]ELw]]j 8637
-set /IQcegovH_y@ktKc//`jqh^hzN_vzGgN[/VgPRIcQTr[BTIfu//z_Bwu\OUcsoi\q]//o\ElEiZk`HzPG]t/zbxeW@Tgpr`LeFo///Ra^KZPQrZp_e@mg//Nr[pSuPIpaYuVAO 9956
-set /cdVdEdyRYaUy_bq///fHFOOGufsM`SOnu/qAHyPDkYWKzNQgS 5922
-set ///@W_NWVlFmJHb\MO///xEXDvBe_eeYBW`x///oP[rbFfoJCFGTzl//JUTjYbS\wlGybqR 4493
-set ///PiecncKHWhf[^fc//TBoMpEnxoFfoxaK//WNsdzb]MVyLN[yf//_xeGoZJsW@xygKb 3254
-search 6665
+set proj2.c resolução do projeto
+set README.md enunciado do projeto
+set tests/Makefile execução dos testes
+set tests/test01.in primeiro teste
+set tests/test02.in segundo teste
+set Makefile construção do projeto
+set guidelines.md orientações para a escrita do projeto
+list
+delete tests
+list
 quit

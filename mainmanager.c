@@ -76,7 +76,7 @@ void print(char *s, linkAVL x, Dlist *dll){
 	char *auxStr, *tempS = (char*)malloc(sizeof(char)*(strlen(s)+1));
 	linkAVL auxTree = x;
 	strcpy(tempS, s);
-	if(auxTree != NULL && auxTree->node != NULL){
+	if(auxTree != NULL && auxTree->node != NULL && dll != NULL){
 		for(auxNode = dll->head; auxNode != NULL; auxNode = auxNode->next){
 			auxStr = (char*)malloc(sizeof(char)*(strlen(auxNode->dirName)+2));
 			auxStr[0] = '\0';
@@ -162,7 +162,7 @@ void traverseListSubPath(linkAVL x){
 		return;
 	}
 	traverseListSubPath(x->left);
-	if(strcmp(x->node->dirName, "") != 0) printf("%s\n", x->node->dirName);
+	if(x->node != NULL && strcmp(x->node->dirName, "") != 0) printf("%s\n", x->node->dirName);
 	traverseListSubPath(x->right);
 	return;
 }
@@ -241,11 +241,10 @@ void del(linkAVL x, Dlist *dll){
 		auxTree = auxDir->tree;
 		dir = strtok(NULL, "/");
 	}
-	puts("equipa");
 	auxDLL = deleteNodeDLL(auxDLL, auxDir->dirName);
-	puts("coatres");
 	prevTree = deleteNodeAVL(auxDir, prevTree);
-	puts("bryan ruiz");
+	free(auxDir);
+	auxDir = NULL;
 	free(dir);
 	free(path);
 	return;

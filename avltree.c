@@ -41,27 +41,26 @@ int height(struct nodeAVL *x){
 }
 
 linkAVL max(linkAVL tree){
-  for(; tree != NULL && tree->right != NULL; tree = tree->right);
-  return tree;
+  linkAVL x;
+  for(x = tree; x->right != NULL; x = x->right);
+  return x;
 }
 
 linkAVL rotL(linkAVL node){
   linkAVL x = node->right;
   node->right = x->left;
   x->left = node;
-  updateHeight(node);
-  updateHeight(x);
+  node = updateHeight(node);
+  x = updateHeight(x);
   return x; 
 }
 
 linkAVL rotR(linkAVL node){
   linkAVL x = node->left;
-  puts("coco");
   node->left = x->right;
-  puts("chinchila");
   x->right = node;
-  updateHeight(node);
-  updateHeight(x);
+  node = updateHeight(node);
+  x = updateHeight(x);
   return x; 
 }
 
@@ -103,20 +102,12 @@ linkAVL balanceAVL(linkAVL x){
   if(x == NULL) return x;
   balanceFactor = balanceNode(x);
   if(balanceFactor > 1){
-    if(balanceNode(x->left) >= 0){
-      x = rotR(x);
-    }
-    else{
-      x = rotLR(x);
-    }
+    if(balanceNode(x->left) >= 0) x = rotR(x);
+    else x = rotLR(x);
   }
   else if(balanceFactor < -1){
-    if(balanceNode(x->right) <= 0){
-      x = rotL(x);
-    }
-    else{
-      x = rotRL(x);
-    }
+    if(balanceNode(x->right) <= 0) x = rotL(x);
+    else x = rotRL(x);
   }
   else{
     x = updateHeight(x);
@@ -197,10 +188,8 @@ linkAVL freeNodeAVL(linkAVL x){
 
 linkAVL deleteNodeAVL(struct nodeAVL *toDelete, linkAVL tree){
   linkAVL auxTree;
-  struct nodeAVL* auxNode;
-  if(tree == NULL){
-    return tree;
-  }
+  struct nodeAVL *auxNode;
+  if(tree == NULL) return tree;
   else if(strcmp(toDelete->dirName, tree->node->dirName) < 0){
     tree->left = deleteNodeAVL(toDelete, tree->left);
   }
@@ -213,21 +202,15 @@ linkAVL deleteNodeAVL(struct nodeAVL *toDelete, linkAVL tree){
       auxNode = tree->node;
       tree->node = auxTree->node;
       auxTree->node = auxNode;
-      tree->left = deleteNodeAVL(auxTree->node, tree->left);
     }
     else{
       auxTree = tree;
-      if(tree->left == NULL && tree->right == NULL){
-        tree = NULL;
-      }
-      else if(tree->left == NULL){
-        tree = tree->right;
-      }
-      else{
-        tree = tree->left;
-      }
-      freeNodeAVL(auxTree);
+      if(tree->left == NULL && tree->right == NULL) tree = NULL;
+      else if(tree->left == NULL) tree = tree->right;
+      else tree = tree->right;
+      freeNodeAVL(tree);
       free(auxTree);
+      auxTree = NULL;
     }
   }
   tree = balanceAVL(tree);

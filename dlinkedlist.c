@@ -28,23 +28,13 @@ Dlist *insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir){
 /* deletes a node from the DLL */
 Dlist* deleteNodeDLL(Dlist *dll, char *s){
   struct nodeAVL *currNode, *prevNode;
-  if(dll->head == NULL)
-  for(currNode = dll->head, prevNode = NULL; currNode != NULL; prevNode = currNode, currNode = currNode->next){
-    if(currNode->dirName != NULL)
+  int found = 0;
+  for(currNode = dll->head, prevNode = NULL; !found && currNode != NULL; prevNode = currNode, currNode = currNode->next){
     if(strcmp(currNode->dirName, s) == 0){
-      if(currNode == dll->head){
-        if(currNode->next != NULL){
-          dll->head = currNode->next;
-          dll->head->prev = NULL;
-        }
-        else dll->head = NULL;
-      }
-      else{
-        if(prevNode->next != NULL) prevNode->next = currNode->next;
-        if(currNode->next != NULL) currNode->next->prev = prevNode;
-      }
-      /* the node itself will be freed afterwards, in freeNodeAVL */
-      return dll;
+      if(currNode == dll->head) dll->head = currNode->next;
+      else prevNode->next = currNode->next;
+      /* I don't free the node itself here, it happens afterwards */
+      found++;
     }
   }
   return dll;
