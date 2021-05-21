@@ -254,6 +254,7 @@ void del(linkAVL x, Dlist *dll){
 	}
 	auxDLL = deleteNodeDLL(auxDLL, auxDir->dirName);
 	prevTree = deleteNodeAVL(auxDir, prevTree);
+	auxTree = freeNodeAVL(auxTree);
 	free(path);
 	return;
 }

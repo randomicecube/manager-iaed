@@ -204,10 +204,10 @@ linkAVL freeNodeAVL(linkAVL x){
     }
     x->node->subDirectories = NULL;
     if(x->node->value != NULL){
-      x->node->value = NULL;
+      free(x->node->value);
     }
     if(x->node->dirName != NULL){
-      x->node->dirName = NULL;
+      free(x->node->dirName);
     }
     free(x->node);
     x->node = NULL;
