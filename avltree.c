@@ -9,6 +9,16 @@
 #include <string.h>
 #include "util.h"
 
+/* initalizes a "fresh" AVL tree */
+linkAVL initializeAVL(){
+  linkAVL newTree = (linkAVL)malloc(sizeof(struct treeAVL));
+  newTree->left = NULL;
+  newTree->right = NULL;
+  newTree->node = createNodeAVL("", "");
+  return newTree;
+}
+
+/* initializes a "fresh" AVL tree node */ 
 struct nodeAVL* createNodeAVL(char *s, char *name){
   struct nodeAVL* newNode = (struct nodeAVL *)malloc(sizeof(struct nodeAVL));
   if(strcmp("", s) != 0){
@@ -33,6 +43,7 @@ struct nodeAVL* createNodeAVL(char *s, char *name){
   return newNode;
 }
 
+/* returns the height of a given node of an AVL tree */
 int height(struct nodeAVL *x){
   if(x == NULL){
     return 0;
@@ -40,12 +51,14 @@ int height(struct nodeAVL *x){
   return x->height;
 }
 
+/* returns the "max" element from a given AVL tree */
 linkAVL max(linkAVL tree){
   linkAVL x;
   for(x = tree; x->right != NULL; x = x->right);
   return x;
 }
 
+/* left rotation to the AVL tree */
 linkAVL rotL(linkAVL node){
   linkAVL x = node->right;
   node->right = x->left;
@@ -55,6 +68,7 @@ linkAVL rotL(linkAVL node){
   return x; 
 }
 
+/* right rotation to the AVL tree */
 linkAVL rotR(linkAVL node){
   linkAVL x = node->left;
   node->left = x->right;
@@ -64,6 +78,7 @@ linkAVL rotR(linkAVL node){
   return x; 
 }
 
+/* left-right rotation to the AVL tree */
 linkAVL rotLR(linkAVL node){
   if(node == NULL){
     return node;
@@ -72,6 +87,7 @@ linkAVL rotLR(linkAVL node){
   return rotR(node);
 }
 
+/* right-left rotation to the AVL tree */
 linkAVL rotRL(linkAVL node){
   if(node == NULL){
     return node;
@@ -80,6 +96,7 @@ linkAVL rotRL(linkAVL node){
   return rotL(node);
 }
 
+/* updates the height associated to the node of an AVL tree */
 linkAVL updateHeight(linkAVL x){
   int hLeft, hRight;
   if(x->left != NULL) hLeft = height(x->left->node);
@@ -90,6 +107,7 @@ linkAVL updateHeight(linkAVL x){
   return x;
 }
 
+/* returns the balance of a given AVL tree's "head" */
 int balanceNode(linkAVL x){
   if(x == NULL || (x->left == NULL && x->right == NULL)) return 0;
   else if(x->left != NULL && x->right != NULL) return height(x->left->node) - height(x->right->node);
@@ -97,6 +115,7 @@ int balanceNode(linkAVL x){
   else return height(x->left->node);
 }
 
+/* aux function to the AVL tree, balances it */
 linkAVL balanceAVL(linkAVL x){
   int balanceFactor;
   if(x == NULL) return x;
@@ -115,9 +134,9 @@ linkAVL balanceAVL(linkAVL x){
   return x;
 }
 
-
+/* inserts a node into an AVL tree */
 linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode){
-  if(strcmp("", x->node->dirName) == 0){
+  if(x->node == NULL || strcmp("", x->node->dirName) == 0){
     x->node = newNode;
     x->left = initializeAVL();
     x->right = initializeAVL();
@@ -133,10 +152,11 @@ linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode){
   return x;
 }
 
-
+/* traverses through an AVL tree, looking for a directory;
+if it isn't found AND func is FIND_ERROR, it prints NOT_FOUND */
 struct nodeAVL* traverse(int func, char *dir, linkAVL x){
 	int comp;
-	if(x == NULL){
+	if(x == NULL || x->node == NULL){
     if(func == FIND_ERROR){
 		  printf(NOT_FOUND);
     }
@@ -154,38 +174,48 @@ struct nodeAVL* traverse(int func, char *dir, linkAVL x){
 	}
 }
 
+/* frees a tree (and the node it points to) */
 linkAVL freeAVL(linkAVL tree){
   if(tree != NULL){
-    if(tree->left != NULL) tree->left = freeAVL(tree->left);
-    if(tree->right != NULL) tree->right = freeAVL(tree->right);
-    if(tree->node != NULL) tree = freeNodeAVL(tree);
-    free(tree->left);
-    tree->left = NULL;
-    free(tree->right);
-    tree->right = NULL;
-    free(tree->node);
-    tree->node = NULL;
+    if(tree->left != NULL){
+      tree->left = freeAVL(tree->left);
+      free(tree->left);
+      tree->left = NULL;
+    }
+    if(tree->right != NULL){
+      tree->right = freeAVL(tree->right);
+      free(tree->right);
+      tree->right = NULL;
+    }
+    if(tree->node != NULL){
+      tree = freeNodeAVL(tree);
+    }
   }
   return tree;
 }
 
+/* frees a node (and the tree it points to) */
 linkAVL freeNodeAVL(linkAVL x){
   if(x->node != NULL){
-    if(x->node->tree != NULL) freeAVL(x->node->tree);
-    free(x->node->tree);
-    x->node->tree = NULL;
-    free(x->node->subDirectories);
+    if(x->node->tree != NULL){
+      freeAVL(x->node->tree);
+      free(x->node->tree);
+      x->node->tree = NULL;
+    }
     x->node->subDirectories = NULL;
-    free(x->node->value);
-    x->node->value = NULL;
-    free(x->node->dirName);
-    x->node->dirName = NULL;
+    if(x->node->value != NULL){
+      x->node->value = NULL;
+    }
+    if(x->node->dirName != NULL){
+      x->node->dirName = NULL;
+    }
     free(x->node);
     x->node = NULL;
   }
   return x;
 }
 
+/* deletes a node from the AVL tree */
 linkAVL deleteNodeAVL(struct nodeAVL *toDelete, linkAVL tree){
   linkAVL auxTree;
   struct nodeAVL *auxNode;
@@ -202,26 +232,17 @@ linkAVL deleteNodeAVL(struct nodeAVL *toDelete, linkAVL tree){
       auxNode = tree->node;
       tree->node = auxTree->node;
       auxTree->node = auxNode;
+      tree->left = deleteNodeAVL(auxTree->node, tree->left);
     }
     else{
       auxTree = tree;
       if(tree->left == NULL && tree->right == NULL) tree = NULL;
       else if(tree->left == NULL) tree = tree->right;
       else tree = tree->right;
-      freeNodeAVL(tree);
+      freeNodeAVL(auxTree);
       free(auxTree);
-      auxTree = NULL;
     }
   }
   tree = balanceAVL(tree);
   return tree;
-}
-
-linkAVL initializeAVL(){
-  linkAVL newTree = (linkAVL)malloc(sizeof(struct treeAVL));
-  struct nodeAVL *newNode = createNodeAVL("", "");
-  newTree->left = NULL;
-  newTree->right = NULL;
-  newTree->node = newNode;
-  return newTree;
 }

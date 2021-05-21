@@ -24,8 +24,6 @@ int main(){
 	return 0;
 }
 
-/* TODO: set, print, find, list, search, delete */
-
 /* Hub that redirects the command to its respective functions */
 linkAVL commandHub(linkAVL tree, Dlist *dll, char*s){
 	char *command = (char*)malloc(sizeof(char)*MAX_COMMAND_SIZE), *auxStr;
@@ -33,6 +31,7 @@ linkAVL commandHub(linkAVL tree, Dlist *dll, char*s){
 
 	if(strcmp(command, QUIT) == 0){
 		tree = freeAVL(tree);
+		free(tree);
 		free(dll);
 		free(command);
 		return NULL;
@@ -49,7 +48,7 @@ linkAVL commandHub(linkAVL tree, Dlist *dll, char*s){
 		print(auxStr, tree, dll);
 		free(auxStr);
 	}
-	else if(strcmp(command, SET) == 0) 
+	else if(strcmp(command, SET) == 0)
 		tree = set(tree, dll, s);
 	else if(strcmp(command, FIND) == 0) 
 		find(tree, s);
@@ -64,6 +63,7 @@ linkAVL commandHub(linkAVL tree, Dlist *dll, char*s){
 	return tree;
 }
 
+/* reads a value from stdin */
 void readValue(char *s){
 	int i = 0;
 	char c;

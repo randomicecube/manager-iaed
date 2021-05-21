@@ -4,12 +4,27 @@
  * Description: Header file containing general macros and prototypes, structs
  */
 
+/* ----------------------------------------------------------------------------
+
+General explanation of the data structures implemented
+
+The idea was to utilize 2 data structures together - a doubly-linked list and
+an AVL tree. The AVL tree is sorted aplhabetically, and it has "layers" - a
+node in the tree points to another tree, and so on, to aid in the hierarchy
+aspect of the project. Each node (and the "root" itself) has a DLL associated,
+which stores the pointers to each node of the AVL, but with a twist: here, they
+are sorted by when they were introduced. This way, in "search" and "print",
+when the goal is to look up items by depth and creation order, it's much easier
+to do so!
+
+---------------------------------------------------------------------------- */
+
 /* ------------------------------MACROS/DEFINES----------------------------- */
 
 /* the command can have at most 6 characters + '\0' */
 #define MAX_COMMAND_SIZE 7
 /* initial "to-be stored" memory amount for the input */
-#define MEM_AMOUNT 4096 
+#define MEM_AMOUNT 1028 
 
 /* the program must stop - the command was quit */
 #define EXIT 0
@@ -93,14 +108,13 @@ int searchAux(char *bleh, char *s, linkAVL x, Dlist *dll);
 
 /* general DLL-related function prototypes */
 Dlist* insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir);
-void lookupDLL(struct nodeAVL *head, struct nodeAVL *x);
 Dlist* deleteNodeDLL(Dlist *dll, char *s);
-Dlist* freeDLL(Dlist *dll);
 Dlist* initializeDLL();
 
 /* general AVL-tree-related function prototypes */
+linkAVL initializeAVL();
 struct nodeAVL* createNodeAVL(char *s, char *name);
-int height(struct nodeAVL *node);
+int height(struct nodeAVL *x);
 linkAVL max(linkAVL tree);
 linkAVL rotL(linkAVL node);
 linkAVL rotR(linkAVL node);
@@ -111,7 +125,6 @@ int balanceNode(linkAVL node);
 linkAVL balanceAVL(linkAVL x);
 linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode);
 struct nodeAVL* traverse(int func, char *dir, linkAVL x);
-linkAVL deleteNodeAVL(struct nodeAVL *toDelete, linkAVL tree);
 linkAVL freeAVL(linkAVL tree);
-linkAVL initializeAVL();
 linkAVL freeNodeAVL(linkAVL x);
+linkAVL deleteNodeAVL(struct nodeAVL *toDelete, linkAVL tree);

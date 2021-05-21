@@ -40,6 +40,7 @@ Dlist* deleteNodeDLL(Dlist *dll, char *s){
   return dll;
 }
 
+/* initializes a "fresh" DLL */
 Dlist* initializeDLL(){
   Dlist *newList = (Dlist *)malloc(sizeof(Dlist));
   newList->head = NULL;
