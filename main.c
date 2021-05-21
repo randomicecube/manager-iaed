@@ -20,6 +20,7 @@ int main(){
 		rootAVL = commandHub(rootAVL, rootDLL, rootValue);
 	}while(rootAVL != NULL);
 
+	free(rootValue);
 	return 0;
 }
 

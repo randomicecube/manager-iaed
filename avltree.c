@@ -56,7 +56,9 @@ linkAVL rotL(linkAVL node){
 
 linkAVL rotR(linkAVL node){
   linkAVL x = node->left;
+  puts("coco");
   node->left = x->right;
+  puts("chinchila");
   x->right = node;
   updateHeight(node);
   updateHeight(x);
@@ -81,8 +83,10 @@ linkAVL rotRL(linkAVL node){
 
 linkAVL updateHeight(linkAVL x){
   int hLeft, hRight;
-  hLeft = height(x->left->node);
-  hRight = height(x->right->node);
+  if(x->left != NULL) hLeft = height(x->left->node);
+  else hLeft = 0;
+  if(x->right != NULL) hRight = height(x->right->node);
+  else hRight = 0;
   x->node->height = hLeft > hRight ? hLeft + 1: hRight + 1;
   return x;
 }
@@ -161,28 +165,32 @@ struct nodeAVL* traverse(int func, char *dir, linkAVL x){
 
 linkAVL freeAVL(linkAVL tree){
   if(tree != NULL){
-    if(tree->node != NULL) tree = freeNodeAVL(tree);
     if(tree->left != NULL) tree->left = freeAVL(tree->left);
     if(tree->right != NULL) tree->right = freeAVL(tree->right);
+    if(tree->node != NULL) tree = freeNodeAVL(tree);
     free(tree->left);
     tree->left = NULL;
     free(tree->right);
     tree->right = NULL;
+    free(tree->node);
+    tree->node = NULL;
   }
   return tree;
 }
 
 linkAVL freeNodeAVL(linkAVL x){
   if(x->node != NULL){
+    if(x->node->tree != NULL) freeAVL(x->node->tree);
+    free(x->node->tree);
+    x->node->tree = NULL;
     free(x->node->subDirectories);
     x->node->subDirectories = NULL;
     free(x->node->value);
     x->node->value = NULL;
     free(x->node->dirName);
     x->node->dirName = NULL;
-    if(x->node->tree != NULL) freeAVL(x->node->tree);
-    free(x->node->tree);
-    x->node->tree = NULL;
+    free(x->node);
+    x->node = NULL;
   }
   return x;
 }
@@ -222,7 +230,6 @@ linkAVL deleteNodeAVL(struct nodeAVL *toDelete, linkAVL tree){
       free(auxTree);
     }
   }
-  puts("a");
   tree = balanceAVL(tree);
   return tree;
 }

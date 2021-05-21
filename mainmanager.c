@@ -76,7 +76,7 @@ void print(char *s, linkAVL x, Dlist *dll){
 	char *auxStr, *tempS = (char*)malloc(sizeof(char)*(strlen(s)+1));
 	linkAVL auxTree = x;
 	strcpy(tempS, s);
-	if(auxTree->node != NULL){
+	if(auxTree != NULL && auxTree->node != NULL){
 		for(auxNode = dll->head; auxNode != NULL; auxNode = auxNode->next){
 			auxStr = (char*)malloc(sizeof(char)*(strlen(auxNode->dirName)+2));
 			auxStr[0] = '\0';
@@ -144,8 +144,9 @@ void list(linkAVL x){
 	else skip = 1;
 	
 	while(skip == 0 && dir != NULL){
-		auxDir = traverse(NOT_FIND_ERROR, dir, auxTree);
-		if(strcmp(auxDir->dirName, "") == 0){
+		/* perhaps change FIND_ERROR to another name */
+		auxDir = traverse(FIND_ERROR, dir, auxTree);
+		if(auxDir == NULL){
 			return;
 		}
 		dir = strtok(NULL, "/");
@@ -190,18 +191,18 @@ void search(linkAVL x, Dlist *dll, char *s){
 /* WARNING ----------------------------------- */
 /* this function needs a thorough cleansing */
 /* WARNING ----------------------------------- */
-int searchAux(char *bleh, char *s, linkAVL x, Dlist *dll){
+int searchAux(char *path, char *s, linkAVL x, Dlist *dll){
 	struct nodeAVL *auxNode;
 	char *auxStr;
 	linkAVL auxTree = x;
 	if(auxTree->node != NULL){
 		for(auxNode = dll->head; auxNode != NULL; auxNode = auxNode->next){
-			if(strcmp(auxNode->value, s) == 0 || searchAux(bleh, s, auxNode->tree, auxNode->subDirectories) == SUCCESS){
-				auxStr = (char*)malloc(sizeof(char)*(strlen(s)+strlen(auxNode->dirName)+1));
+			if(strcmp(auxNode->value, s) == 0 || searchAux(path, s, auxNode->tree, auxNode->subDirectories) == SUCCESS){
+				auxStr = (char*)malloc(sizeof(char)*(strlen(path)+strlen(s)+strlen(auxNode->dirName)+1));
 				strcpy(auxStr, "/");
 				strcat(auxStr, auxNode->dirName);
-				strcat(auxStr, bleh);
-				strcpy(bleh, auxStr);
+				strcat(auxStr, path);
+				strcpy(path, auxStr);
 				free(auxStr);
 				return SUCCESS;
 			}
@@ -240,9 +241,11 @@ void del(linkAVL x, Dlist *dll){
 		auxTree = auxDir->tree;
 		dir = strtok(NULL, "/");
 	}
-	prevTree = deleteNodeAVL(auxDir, prevTree);
+	puts("equipa");
 	auxDLL = deleteNodeDLL(auxDLL, auxDir->dirName);
-	free(auxDir);
+	puts("coatres");
+	prevTree = deleteNodeAVL(auxDir, prevTree);
+	puts("bryan ruiz");
 	free(dir);
 	free(path);
 	return;

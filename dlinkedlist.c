@@ -28,7 +28,9 @@ Dlist *insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir){
 /* deletes a node from the DLL */
 Dlist* deleteNodeDLL(Dlist *dll, char *s){
   struct nodeAVL *currNode, *prevNode;
+  if(dll->head == NULL)
   for(currNode = dll->head, prevNode = NULL; currNode != NULL; prevNode = currNode, currNode = currNode->next){
+    if(currNode->dirName != NULL)
     if(strcmp(currNode->dirName, s) == 0){
       if(currNode == dll->head){
         if(currNode->next != NULL){
