@@ -120,11 +120,11 @@ linkAVL balanceAVL(linkAVL x){
   int balanceFactor;
   if(x == NULL) return x;
   balanceFactor = balanceNode(x);
-  if(balanceFactor > 1){
+  if(balanceFactor > 1 && x->left != NULL){
     if(balanceNode(x->left) >= 0) x = rotR(x);
     else x = rotLR(x);
   }
-  else if(balanceFactor < -1){
+  else if(balanceFactor < -1 && x->right != NULL){
     if(balanceNode(x->right) <= 0) x = rotL(x);
     else x = rotRL(x);
   }
@@ -137,6 +137,7 @@ linkAVL balanceAVL(linkAVL x){
 /* inserts a node into an AVL tree */
 linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode){
   if(x->node == NULL || x->node->dirName == NULL || strcmp("", x->node->dirName) == 0){
+    freeNodeAVL(x);
     x->node = newNode;
     x->left = initializeAVL();
     x->right = initializeAVL();
@@ -198,11 +199,14 @@ linkAVL freeAVL(linkAVL tree){
 linkAVL freeNodeAVL(linkAVL x){
   if(x->node != NULL){
     if(x->node->tree != NULL){
-      freeAVL(x->node->tree);
+      x->node->tree = freeAVL(x->node->tree);
       free(x->node->tree);
       x->node->tree = NULL;
     }
-    x->node->subDirectories = NULL;
+    if(x->node->subDirectories != NULL){
+      free(x->node->subDirectories);
+      x->node->subDirectories = NULL;
+    }
     if(x->node->value != NULL){
       free(x->node->value);
       x->node->value = NULL;

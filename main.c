@@ -34,8 +34,6 @@ linkAVL commandHub(linkAVL tree, Dlist *dll, char*s){
 		free(tree);
 		tree = NULL;
 		free(dll);
-		free(command);
-		return tree;
 	}
 	else if(strcmp(command, HELP) == 0){
 		help();
