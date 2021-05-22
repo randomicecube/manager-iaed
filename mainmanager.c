@@ -79,22 +79,26 @@ void print(char *s, linkAVL x, Dlist *dll){
 	char *auxStr, *tempS = (char*)malloc(sizeof(char)*(strlen(s)+1));
 	linkAVL auxTree = x;
 
+	/* the "base" for this level's path */
 	strcpy(tempS, s);
+
 	if(auxTree != NULL && auxTree->node != NULL && dll != NULL){
 		for(auxNode = dll->head; auxNode != NULL; auxNode = auxNode->next){
-			auxStr = (char*)malloc(sizeof(char)*(strlen(auxNode->dirName)+2));
-			auxStr[0] = '\0';
-			/* building the path */
-			strcat(auxStr, "/");
-			strcat(auxStr, auxNode->dirName);
-			strcat(s, auxStr);
-			free(auxStr);
-			/* if it's not an "empty" node, print the path */
-			if(strcmp(auxNode->value, "") != 0){
-				printf("%s %s\n", s, auxNode->value);
+			if(auxNode->dirName != NULL && auxNode->value != NULL){
+				auxStr = (char*)malloc(sizeof(char)*(strlen(auxNode->dirName)+strlen(s)+2));
+				auxStr[0] = '\0';
+				/* building the path */
+				strcat(auxStr, "/");
+				strcat(auxStr, auxNode->dirName);
+				strcat(s, auxStr);
+				free(auxStr);
+				/* if it's not an "empty" node, print the path (and its value) */
+				if(strcmp(auxNode->value, "") != 0){
+					printf("%s %s\n", s, auxNode->value);
+				}
+				print(s, auxNode->tree, auxNode->subDirectories);
+				strcpy(s, tempS);
 			}
-			print(s, auxNode->tree, auxNode->subDirectories);
-			strcpy(s, tempS);
 		}
 	}
 	free(tempS);
@@ -256,7 +260,6 @@ void del(linkAVL x, Dlist *dll){
 	}
 	auxDLL = deleteNodeDLL(auxDLL, auxDir->dirName);
 	prevTree = deleteNodeAVL(auxDir, prevTree);
-	auxTree = freeNodeAVL(auxTree);
 	free(path);
 	return;
 }

@@ -11,6 +11,14 @@
 
 /* for simplicity's sake, I'll refer to a doubly linked list as a DLL */
 
+/* initializes a "fresh" DLL */
+Dlist* initializeDLL(){
+  Dlist *newList = (Dlist *)malloc(sizeof(Dlist));
+  newList->head = NULL;
+  newList->tail = NULL;
+  return newList;
+}
+
 /* inserts the node as the new tail of the DLL */
 Dlist *insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir){
   nodeDir->next = NULL;
@@ -29,7 +37,11 @@ Dlist *insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir){
 Dlist* deleteNodeDLL(Dlist *dll, char *s){
   struct nodeAVL *currNode, *prevNode;
   int found = 0;
-  for(currNode = dll->head, prevNode = NULL; !found && currNode != NULL; prevNode = currNode, currNode = currNode->next){
+  for(
+      currNode = dll->head, prevNode = NULL;
+      !found && currNode != NULL;
+      prevNode = currNode, currNode = currNode->next
+    ){
     if(strcmp(currNode->dirName, s) == 0){
       if(currNode == dll->head) dll->head = currNode->next;
       else prevNode->next = currNode->next;
@@ -38,12 +50,4 @@ Dlist* deleteNodeDLL(Dlist *dll, char *s){
     }
   }
   return dll;
-}
-
-/* initializes a "fresh" DLL */
-Dlist* initializeDLL(){
-  Dlist *newList = (Dlist *)malloc(sizeof(Dlist));
-  newList->head = NULL;
-  newList->tail = NULL;
-  return newList;
 }

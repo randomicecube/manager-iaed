@@ -136,7 +136,7 @@ linkAVL balanceAVL(linkAVL x){
 
 /* inserts a node into an AVL tree */
 linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode){
-  if(x->node == NULL || strcmp("", x->node->dirName) == 0){
+  if(x->node == NULL || x->node->dirName == NULL || strcmp("", x->node->dirName) == 0){
     x->node = newNode;
     x->left = initializeAVL();
     x->right = initializeAVL();
@@ -177,6 +177,9 @@ struct nodeAVL* traverse(int func, char *dir, linkAVL x){
 /* frees a tree (and the node it points to) */
 linkAVL freeAVL(linkAVL tree){
   if(tree != NULL){
+    if(tree->node != NULL){
+      tree = freeNodeAVL(tree);
+    }
     if(tree->left != NULL){
       tree->left = freeAVL(tree->left);
       free(tree->left);
@@ -186,9 +189,6 @@ linkAVL freeAVL(linkAVL tree){
       tree->right = freeAVL(tree->right);
       free(tree->right);
       tree->right = NULL;
-    }
-    if(tree->node != NULL){
-      tree = freeNodeAVL(tree);
     }
   }
   return tree;
@@ -209,7 +209,7 @@ linkAVL freeNodeAVL(linkAVL x){
     }
     if(x->node->dirName != NULL){
       free(x->node->dirName);
-      x->node->value = NULL;
+      x->node->dirName = NULL;
     }
     free(x->node);
     x->node = NULL;
