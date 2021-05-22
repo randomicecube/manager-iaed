@@ -35,10 +35,10 @@ linkAVL set(linkAVL x, Dlist *dll, char *s){
 	scanf("%s", path);
 	getchar();
 	readValue(val);
-
 	dir = strtok(path, "/");
 	while(dir != NULL){
-		auxTraverse = traverse(NOT_FIND_ERROR, dir, auxTree);
+		if(auxTree != NULL && auxTree->node != NULL && auxTree->node->dirName != NULL) auxTraverse = traverse(NOT_FIND_ERROR, dir, auxTree);
+		else auxTraverse = NULL;
 		auxDir = setAux(dir, auxTree, dirDLL);
 		if(auxTree == x && auxTraverse == NULL) x = insertAVL(x, auxDir);
 		else if(auxTraverse == NULL) auxTree = insertAVL(auxTree, auxDir);
@@ -46,7 +46,6 @@ linkAVL set(linkAVL x, Dlist *dll, char *s){
 		auxTree = auxDir->tree;
 		dir = strtok(NULL, "/");
 	}
-
 	if(auxTree == x){
 		strcpy(s, val);
 	}
@@ -61,7 +60,10 @@ linkAVL set(linkAVL x, Dlist *dll, char *s){
 
 /* aux function to set, checks if a given dir is in the tree; if not, adds it */ 
 struct nodeAVL *setAux(char*dir, linkAVL x, Dlist *dll){
-	struct nodeAVL *newNodeAVL = traverse(NOT_FIND_ERROR, dir, x);
+	struct nodeAVL *newNodeAVL;
+	if(x != NULL && x->node != NULL && x->node->dirName != NULL) newNodeAVL = traverse(NOT_FIND_ERROR, dir, x);
+	else newNodeAVL = NULL;
+
 	if(newNodeAVL==NULL){
 		newNodeAVL = createNodeAVL("", dir);
 		newNodeAVL->tree = initializeAVL();

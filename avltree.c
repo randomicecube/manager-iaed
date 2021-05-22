@@ -205,9 +205,11 @@ linkAVL freeNodeAVL(linkAVL x){
     x->node->subDirectories = NULL;
     if(x->node->value != NULL){
       free(x->node->value);
+      x->node->value = NULL;
     }
     if(x->node->dirName != NULL){
       free(x->node->dirName);
+      x->node->value = NULL;
     }
     free(x->node);
     x->node = NULL;
@@ -238,7 +240,7 @@ linkAVL deleteNodeAVL(struct nodeAVL *toDelete, linkAVL tree){
       auxTree = tree;
       if(tree->left == NULL && tree->right == NULL) tree = NULL;
       else if(tree->left == NULL) tree = tree->right;
-      else tree = tree->right;
+      else tree = tree->left;
       freeNodeAVL(auxTree);
       free(auxTree);
     }
