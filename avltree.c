@@ -245,7 +245,7 @@ linkAVL deleteNodeAVL(struct nodeAVL *toDelete, linkAVL tree){
       if(tree->left == NULL && tree->right == NULL) tree = NULL;
       else if(tree->left == NULL) tree = tree->right;
       else tree = tree->left;
-      freeNodeAVL(auxTree);
+      freeAVL(auxTree);
       free(auxTree);
     }
   }

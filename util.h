@@ -24,7 +24,7 @@ to do so!
 /* the command can have at most 6 characters + '\0' */
 #define MAX_COMMAND_SIZE 7
 /* initial "to-be stored" memory amount for the input */
-#define MEM_AMOUNT 1000
+#define MEM_AMOUNT 4096
 
 /* the program must stop - the command was quit */
 #define EXIT 0
@@ -99,7 +99,7 @@ void print(char *s, linkAVL x, Dlist *dll);
 void find(linkAVL x, char *s);
 void list(linkAVL x);
 void search(linkAVL x, Dlist *dll, char *s);
-void del(linkAVL x, Dlist *dll);
+linkAVL del(linkAVL x, Dlist *dll);
 
 /* command aux functions */
 struct nodeAVL *setAux(char *dir, linkAVL x, Dlist *dll);

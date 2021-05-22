@@ -23,12 +23,10 @@ Dlist* initializeDLL(){
 Dlist *insertTailDLL(Dlist *dll, struct nodeAVL *nodeDir){
   nodeDir->next = NULL;
   nodeDir->prev = dll->tail;
-  if(dll->head == NULL){
-    dll->head = nodeDir;
-  }
-  if(dll->tail != NULL){
-    dll->tail->next = nodeDir;
-  }
+  
+  if(dll->head == NULL) dll->head = nodeDir;
+  if(dll->tail != NULL) dll->tail->next = nodeDir;
+
   dll->tail = nodeDir;
   return dll;
 }
@@ -39,7 +37,7 @@ Dlist* deleteNodeDLL(Dlist *dll, char *s){
   int found = 0;
   for(
       currNode = dll->head, prevNode = NULL;
-      !found && currNode != NULL;
+      !found && currNode != NULL && currNode->dirName != NULL;
       prevNode = currNode, currNode = currNode->next
     ){
     if(strcmp(currNode->dirName, s) == 0){

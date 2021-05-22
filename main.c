@@ -18,8 +18,19 @@ int main(){
 
 	do{
 		rootAVL = commandHub(rootAVL, rootDLL, rootValue);
+		if(
+			rootAVL != NULL &&
+			strcmp(rootAVL->node->dirName, "") == 0 && 
+			rootAVL->left == NULL && 
+			rootAVL->right == NULL
+			){
+			free(rootDLL);
+			rootDLL = initializeDLL();
+		}
 	}while(rootAVL != NULL);
-
+	
+	free(rootAVL);
+	free(rootDLL);
 	free(rootValue);
 	return 0;
 }
@@ -28,12 +39,11 @@ int main(){
 linkAVL commandHub(linkAVL tree, Dlist *dll, char*s){
 	char *command = (char*)malloc(sizeof(char)*MAX_COMMAND_SIZE), *auxStr;
 	scanf("%s", command);
-
 	if(strcmp(command, QUIT) == 0){
 		tree = freeAVL(tree);
 		free(tree);
-		tree = NULL;
-		free(dll);
+		free(command);
+		return NULL;
 	}
 	else if(strcmp(command, HELP) == 0){
 		help();
@@ -56,7 +66,7 @@ linkAVL commandHub(linkAVL tree, Dlist *dll, char*s){
 	else if(strcmp(command, SEARCH) == 0) 
 		search(tree, dll, s);
 	else if(strcmp(command, DELETE) == 0) 
-		del(tree, dll);
+		tree = del(tree, dll);
 
 	free(command);
 	return tree;

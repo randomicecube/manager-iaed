@@ -87,7 +87,6 @@ void print(char *s, linkAVL x, Dlist *dll){
 
 	/* the "base" for this level's path */
 	strcpy(tempS, s);
-
 	if(auxTree != NULL && auxTree->node != NULL && dll != NULL){
 		for(auxNode = dll->head; auxNode != NULL; auxNode = auxNode->next){
 			if(auxNode->dirName != NULL && auxNode->value != NULL){
@@ -129,6 +128,7 @@ void find(linkAVL x, char *s){
 	while(skip == 0 && dir != NULL){
 		auxDir = traverse(FIND_ERROR, dir, auxTree);
 		if(auxDir == NULL){
+			free(path);
 			return;
 		}
 		auxTree = auxDir->tree;
@@ -136,6 +136,7 @@ void find(linkAVL x, char *s){
 	}
 	if(auxTree == x){
 		printf("%s\n", s);
+		free(path);
 		return;
 	}
 
@@ -161,6 +162,7 @@ void list(linkAVL x){
 	while(skip == 0 && dir != NULL){
 		auxDir = traverse(FIND_ERROR, dir, auxTree);
 		if(auxDir == NULL){
+			free(path);
 			return;
 		}
 		dir = strtok(NULL, "/");
@@ -194,6 +196,8 @@ void search(linkAVL x, Dlist *dll, char *s){
 	readValue(value);
 
 	if(strcmp(value, s) == 0){
+		free(value);
+		free(rightPath);
 		return;
 	}
 	if(searchAux(rightPath, value, x, dll) == FAIL){
@@ -236,7 +240,7 @@ int searchAux(char *path, char *s, linkAVL x, Dlist *dll){
 }
 
 /* delete - deletes a path and all its subpaths */
-void del(linkAVL x, Dlist *dll){
+linkAVL del(linkAVL x, Dlist *dll){
 	char c, *dir, *path = (char*)malloc(sizeof(char)*MEM_AMOUNT);
 	linkAVL auxTree = x, prevTree = x;
 	Dlist *auxDLL = dll;
@@ -247,10 +251,10 @@ void del(linkAVL x, Dlist *dll){
 	}
 	else{
 		x = freeAVL(x);
+		free(x);
 		x = initializeAVL();
-		dll = initializeDLL();
 		free(path);
-		return;
+		return x;
 	}
 
 	dir = strtok(path, "/");
@@ -259,7 +263,7 @@ void del(linkAVL x, Dlist *dll){
 		auxDir = traverse(FIND_ERROR, dir, auxTree);
 		if(auxDir == NULL){
 			free(path);
-			return;
+			return x;
 		}
 		prevTree = auxTree;
 		auxTree = auxDir->tree;
@@ -268,5 +272,5 @@ void del(linkAVL x, Dlist *dll){
 	auxDLL = deleteNodeDLL(auxDLL, auxDir->dirName);
 	prevTree = deleteNodeAVL(auxDir, prevTree);
 	free(path);
-	return;
+	return x;
 }
