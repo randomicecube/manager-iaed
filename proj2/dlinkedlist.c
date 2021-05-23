@@ -9,7 +9,7 @@
 #include <string.h>
 #include "util.h"
 
-/* for simplicity's sake, I'll refer to a doubly linked list as a DLL */
+/* for simplicity's sake, I'll refer to a doubly-linked list as a DLL */
 
 /* initializes a "fresh" DLL */
 Dlist* initializeDLL(){

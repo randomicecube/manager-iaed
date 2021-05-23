@@ -15,7 +15,7 @@ aspect of the project. Each node (and the "root" itself) has a DLL associated,
 which stores the pointers to each node of the AVL, but with a twist: here, they
 are sorted by when they were introduced. This way, in "search" and "print",
 when the goal is to look up items by depth and creation order, it's much easier
-to do so!
+(and more efficient) to do so!
 
 ---------------------------------------------------------------------------- */
 
@@ -24,7 +24,7 @@ to do so!
 /* the command can have at most 6 characters + '\0' */
 #define MAX_COMMAND_SIZE 7
 /* initial "to-be stored" memory amount for the input */
-#define MEM_AMOUNT 4096
+#define MEM_AMOUNT 66000
 
 /* the program must stop - the command was quit */
 #define EXIT 0
@@ -89,7 +89,7 @@ typedef struct Dlist{
 /* -------------------------------PROTOTYPES-------------------------------- */
 
 /* functions related to redirecting commands/reading input */
-linkAVL commandHub();
+linkAVL commandHub(linkAVL tree, Dlist **dll, char*s);
 void readValue(char *s);
 
 /* command "main" functions */
@@ -101,9 +101,9 @@ void list(linkAVL x);
 void search(linkAVL x, Dlist *dll, char *s);
 linkAVL del(linkAVL x, Dlist *dll);
 
-/* command aux functions */
+/* command "aux" functions */
+linkAVL set_r(linkAVL x, Dlist *dll, char* path, char* value);
 struct nodeAVL *setAux(char *dir, linkAVL x, Dlist *dll);
-linkAVL set_r(linkAVL x, Dlist *dll, char *path, char *val);
 void traverseListSubPath(linkAVL x);
 int searchAux(char *bleh, char *s, linkAVL x, Dlist *dll);
 
@@ -113,7 +113,7 @@ Dlist* deleteNodeDLL(Dlist *dll, char *s);
 Dlist* initializeDLL();
 
 /* general AVL-tree-related function prototypes */
-linkAVL initializeAVL();
+linkAVL initializeAVL(struct nodeAVL* node);
 struct nodeAVL* createNodeAVL(char *s, char *name);
 int height(linkAVL x);
 linkAVL max(linkAVL tree);

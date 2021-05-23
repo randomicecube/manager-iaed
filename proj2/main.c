@@ -12,17 +12,19 @@
 /* Main program function */
 int main(){
 	Dlist *rootDLL = initializeDLL();
-	linkAVL rootAVL = initializeAVL();
+	linkAVL rootAVL = NULL;
 	char *rootValue = (char*)malloc(sizeof(char)*MEM_AMOUNT);
 	strcpy(rootValue, "");
 
+	/* "state machine", leaves the loop at quit */
 	do{
-		rootAVL = commandHub(rootAVL, rootDLL, rootValue);
-		if(rootAVL == NULL){
+		rootAVL = commandHub(rootAVL, &rootDLL, rootValue);
+		if(rootAVL == NULL && rootDLL != NULL){
+			/* enters if the command was delete with no other arguments */
 			free(rootDLL);
 			rootDLL = initializeDLL();
 		}
-	}while(rootAVL != NULL);
+	}while(rootDLL != NULL);
 	
 	free(rootAVL);
 	free(rootDLL);
@@ -31,13 +33,16 @@ int main(){
 }
 
 /* Hub that redirects the command to its respective functions */
-linkAVL commandHub(linkAVL tree, Dlist *dll, char*s){
+linkAVL commandHub(linkAVL tree, Dlist **dll, char*s){
 	char *command = (char*)malloc(sizeof(char)*MAX_COMMAND_SIZE), *auxStr;
 	scanf("%s", command);
+	
 	if(strcmp(command, QUIT) == 0){
 		tree = freeAVL(tree);
 		free(tree);
 		free(command);
+		free(*dll);
+		*dll = NULL;
 		return NULL;
 	}
 	else if(strcmp(command, HELP) == 0){
@@ -49,20 +54,20 @@ linkAVL commandHub(linkAVL tree, Dlist *dll, char*s){
 		}
 		auxStr = (char *)malloc(sizeof(char)*MEM_AMOUNT);
 		strcpy(auxStr, "");
-		print(auxStr, tree, dll);
+		print(auxStr, tree, *dll);
 		free(auxStr);
 	}
 	else if(strcmp(command, SET) == 0){
-		tree = set(tree, dll, s);
+		tree = set(tree, *dll, s);
 	}
 	else if(strcmp(command, FIND) == 0) 
 		find(tree, s);
 	else if(strcmp(command, LIST) == 0)
 		list(tree);
 	else if(strcmp(command, SEARCH) == 0) 
-		search(tree, dll, s);
+		search(tree, *dll, s);
 	else if(strcmp(command, DELETE) == 0) 
-		tree = del(tree, dll);
+		tree = del(tree, *dll);
 
 	free(command);
 	return tree;

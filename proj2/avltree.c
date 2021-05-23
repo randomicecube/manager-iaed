@@ -1,5 +1,5 @@
 /*
- * File: dlinkedlist.c
+ * File: avltree.c
  * Author: Diogo Gaspar, 99207
  * Description: File containing the AVL tree's functions and definitions
  */
@@ -10,11 +10,11 @@
 #include "util.h"
 
 /* initalizes a "fresh" AVL tree */
-linkAVL initializeAVL(){
+linkAVL initializeAVL(struct nodeAVL* node){
   linkAVL newTree = (linkAVL)malloc(sizeof(struct treeAVL));
   newTree->left = NULL;
   newTree->right = NULL;
-  newTree->node = createNodeAVL("", "");
+  newTree->node = node;
   newTree->height = 1;
   return newTree;
 }
@@ -131,8 +131,7 @@ linkAVL balanceAVL(linkAVL x){
 /* inserts a node into an AVL tree */
 linkAVL insertAVL(linkAVL x, struct nodeAVL *newNode){
   if(x == NULL || x->node == NULL || x->node->dirName == NULL){
-    x = initializeAVL();
-    x->node = newNode;
+    x = initializeAVL(newNode);
     return x;
   }
   if(strcmp(x->node->dirName, newNode->dirName) > 0){
